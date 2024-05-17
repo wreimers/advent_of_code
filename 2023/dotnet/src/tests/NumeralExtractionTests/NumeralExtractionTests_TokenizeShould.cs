@@ -1,6 +1,6 @@
 using System;
 using Xunit;
-using AdventOfCode;
+using AdventOfCode2023;
 
 namespace NumeralExtractionTests
 {
@@ -27,7 +27,7 @@ namespace NumeralExtractionTests
         {
             var numeralExtraction = new NumeralExtraction();
             List<string> result = numeralExtraction.Tokenize("abcdefghijklm8nopqrstuvwxyz");
-            Assert.Equal(result, [ "abcdefghijklm", "8", "nopqrstuvwxyz", ]);
+            Assert.Equal(result, ["abcdefghijklm", "8", "nopqrstuvwxyz",]);
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace NumeralExtractionTests
         {
             var numeralExtraction = new NumeralExtraction();
             List<string> result = numeralExtraction.Tokenize("2468");
-            Assert.Equal(result, [ "2", "4", "6", "8", ]);
+            Assert.Equal(result, ["2", "4", "6", "8",]);
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace NumeralExtractionTests
         {
             var numeralExtraction = new NumeralExtraction();
             List<string> result = numeralExtraction.Tokenize("2legit2quit");
-            Assert.Equal(result, [ "2", "legit", "2", "quit", ]);
+            Assert.Equal(result, ["2", "legit", "2", "quit",]);
         }
 
     }
