@@ -1,5 +1,6 @@
 ﻿using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using AdventOfCode;
 
 Console.WriteLine("Advent of Code 2023");
 
@@ -16,7 +17,8 @@ while (!reader.EndOfStream)
 int sumOfCalibrationValues = 0;
 foreach (string encodedCalibrationValue in inputData)
 {
-    int calibrationValue = DecodeDay1Part1(encodedCalibrationValue);
+    var NumeralExtraction = new NumeralExtraction();
+    int calibrationValue = NumeralExtraction.DecodeDay1Part1(encodedCalibrationValue);
     Console.WriteLine($">> {calibrationValue}");
     sumOfCalibrationValues += calibrationValue;
 }
@@ -24,31 +26,7 @@ foreach (string encodedCalibrationValue in inputData)
 Console.WriteLine("");
 Console.WriteLine(sumOfCalibrationValues);
 
-static int DecodeDay1Part1(string encodedCalibrationValue)
-{
-    bool foundFirstNumeral = false;
-    char firstNumeral = (char)0;
-    char lastNumeral = (char)0;
-    foreach (char character in encodedCalibrationValue.ToCharArray())
-    {
-        if (character >= (char)48 && character <= (char)57)
-        {
-            if (foundFirstNumeral is false)
-            {
-                foundFirstNumeral = true;
-                firstNumeral = character;
-            }
-            lastNumeral = character;
-        }
-    }
-    if (foundFirstNumeral is false)
-    {
-        System.Environment.Exit(1);
-    }
-    string calibrationValueString = $"{firstNumeral}{lastNumeral}";
-    int calibrationValue = Int32.Parse(calibrationValueString);
-    return calibrationValue;
-}
+
 
 /*
 static List<string> Tokenize(string encodedCalibrationValue)
