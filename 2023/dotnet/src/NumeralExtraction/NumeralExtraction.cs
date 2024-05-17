@@ -61,6 +61,10 @@ namespace AdventOfCode
             return tokens;
         }
 
+        public List<string> ExtractFromString(string token) {
+            throw new NotImplementedException();
+        }
+
 /*
         public static int DecodeDay1Part2(string encodedCalibrationValue)
         {
