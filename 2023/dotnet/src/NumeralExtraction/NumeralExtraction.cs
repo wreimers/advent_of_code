@@ -63,7 +63,36 @@ namespace AdventOfCode2023
 
         public List<string> ExtractFromString(string token)
         {
-            throw new NotImplementedException();
+            string[] numeralWords = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", };
+            List<string> resultWords = new List<string>();
+
+            string FirstWordInString(string subToken)
+            {
+                string earliestWord = "";
+                int earliestWordIndex = -1;
+                foreach (string word in numeralWords)
+                {
+                    int wordIndex = token.IndexOf(word);
+                    if (wordIndex < 0) continue;
+                    if (wordIndex == 0) return word;
+                    if (earliestWordIndex == -1 || wordIndex < earliestWordIndex)
+                    {
+                        earliestWord = word;
+                        earliestWordIndex = wordIndex;
+                    }
+                }
+                return earliestWord;
+            }
+
+            while (token.Length >= 3)
+            {
+                string wordMaybe = FirstWordInString(token);
+                if (wordMaybe == "") break;
+                resultWords.Add(wordMaybe);
+                token = token[(token.IndexOf(wordMaybe) + wordMaybe.Length)..];
+            }
+            List<string> returnWords = resultWords.Where(w => w != "").ToList();
+            return returnWords;
         }
 
         /*
