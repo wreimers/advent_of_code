@@ -1,13 +1,13 @@
 ﻿using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
-using AdventOfCode;
+using AdventOfCode2023;
 
 Console.WriteLine("Advent of Code 2023");
 
 List<string> inputData = new List<string>();
 
 // Load data from file
-using StreamReader reader = new("var/day_01/part_01.txt");
+using StreamReader reader = new("var/day_01/input.txt");
 while (!reader.EndOfStream)
 {
     string encodedCalibrationValue = reader.ReadLine();
@@ -17,11 +17,9 @@ while (!reader.EndOfStream)
 int sumOfCalibrationValues = 0;
 foreach (string encodedCalibrationValue in inputData)
 {
-    var NumeralExtraction = new NumeralExtraction();
-    int calibrationValue = NumeralExtraction.DecodeDay1Part1(encodedCalibrationValue);
-    Console.WriteLine($">> {calibrationValue}");
+    // int calibrationValue = NumeralExtraction.DecodeDay1Part1(encodedCalibrationValue);
+    int calibrationValue = NumeralExtraction.DecodeDay1Part2(encodedCalibrationValue);
     sumOfCalibrationValues += calibrationValue;
 }
 
-Console.WriteLine("");
-Console.WriteLine(sumOfCalibrationValues);
+Console.WriteLine($"Sum from {inputData.Count} values: {sumOfCalibrationValues}");

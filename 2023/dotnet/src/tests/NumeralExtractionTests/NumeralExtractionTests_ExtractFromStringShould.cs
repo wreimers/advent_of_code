@@ -9,56 +9,49 @@ namespace NumeralExtractionTests
         [Fact]
         public void ExtractFromString_InputIsEmpty_ReturnEmpty()
         {
-            var numeralExtraction = new NumeralExtraction();
-            List<string> result = numeralExtraction.ExtractFromString("");
+            List<string> result = NumeralExtraction.ExtractFromString("");
             Assert.Empty(result);
         }
 
         [Fact]
         public void ExtractFromString_InputHasOne_ReturnSingle()
         {
-            var numeralExtraction = new NumeralExtraction();
-            List<string> result = numeralExtraction.ExtractFromString("one");
+            List<string> result = NumeralExtraction.ExtractFromString("one");
             Assert.Single(result);
         }
 
         [Fact]
         public void ExtractFromString_InputHasOneOne_ReturnTwo()
         {
-            var numeralExtraction = new NumeralExtraction();
-            List<string> result = numeralExtraction.ExtractFromString("oneone");
+            List<string> result = NumeralExtraction.ExtractFromString("oneone");
             Assert.Equal(2, result.Count);
         }
 
         [Fact]
         public void ExtractFromString_InputHasOneOne_ReturnOneOne()
         {
-            var numeralExtraction = new NumeralExtraction();
-            List<string> result = numeralExtraction.ExtractFromString("oneone");
+            List<string> result = NumeralExtraction.ExtractFromString("oneone");
             Assert.Equal(result, new List<string>(["one", "one",]));
         }
 
         [Fact]
         public void ExtractFromString_InputHasOneOneZeroOneWithGarbage_ReturnOneOneZeroOne()
         {
-            var numeralExtraction = new NumeralExtraction();
-            List<string> result = numeralExtraction.ExtractFromString("onepdonewzeroooooone");
+            List<string> result = NumeralExtraction.ExtractFromString("onepdonewzeroooooone");
             Assert.Equal(result, new List<string>(["one", "one", "zero", "one"]));
         }
 
         [Fact]
         public void ExtractFromString_InputHasOneZeroOne_ReturnOneZeroOne()
         {
-            var numeralExtraction = new NumeralExtraction();
-            List<string> result = numeralExtraction.ExtractFromString("onezeroone");
+            List<string> result = NumeralExtraction.ExtractFromString("onezeroone");
             Assert.Equal(result, new List<string>(["one", "zero", "one",]));
         }
 
         [Fact]
         public void ExtractFromString_InputHasOneZerOne_ReturnOneZero()
         {
-            var numeralExtraction = new NumeralExtraction();
-            List<string> result = numeralExtraction.ExtractFromString("onezerone");
+            List<string> result = NumeralExtraction.ExtractFromString("onezerone");
             Assert.Equal(result, new List<string>(["one", "zero",]));
         }
 

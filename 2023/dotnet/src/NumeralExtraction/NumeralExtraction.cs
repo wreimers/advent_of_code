@@ -30,7 +30,7 @@ namespace AdventOfCode2023
             return calibrationValue;
         }
 
-        public List<string> Tokenize(string encodedCalibrationValue)
+        public static List<string> Tokenize(string encodedCalibrationValue)
         {
             List<string> tokens = new List<string>();
             List<char> buffer = new List<char>();
@@ -61,32 +61,32 @@ namespace AdventOfCode2023
             return tokens;
         }
 
-        public List<string> ExtractFromString(string token)
+        private static string[] numeralWords = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", };
+
+        private static string FirstNumeralWordInString(string token)
         {
-            string[] numeralWords = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", };
-            List<string> resultWords = new List<string>();
-
-            string FirstWordInString(string subToken)
+            string earliestWord = "";
+            int earliestWordIndex = -1;
+            foreach (string word in numeralWords)
             {
-                string earliestWord = "";
-                int earliestWordIndex = -1;
-                foreach (string word in numeralWords)
+                int wordIndex = token.IndexOf(word);
+                if (wordIndex < 0) continue;
+                if (wordIndex == 0) return word;
+                if (earliestWordIndex == -1 || wordIndex < earliestWordIndex)
                 {
-                    int wordIndex = token.IndexOf(word);
-                    if (wordIndex < 0) continue;
-                    if (wordIndex == 0) return word;
-                    if (earliestWordIndex == -1 || wordIndex < earliestWordIndex)
-                    {
-                        earliestWord = word;
-                        earliestWordIndex = wordIndex;
-                    }
+                    earliestWord = word;
+                    earliestWordIndex = wordIndex;
                 }
-                return earliestWord;
             }
+            return earliestWord;
+        }
 
-            while (token.Length >= 3)
+        public static List<string> ExtractFromString(string token)
+        {
+            List<string> resultWords = new List<string>();
+            while (true)
             {
-                string wordMaybe = FirstWordInString(token);
+                string wordMaybe = FirstNumeralWordInString(token);
                 if (wordMaybe == "") break;
                 resultWords.Add(wordMaybe);
                 token = token[(token.IndexOf(wordMaybe) + wordMaybe.Length)..];
@@ -95,78 +95,37 @@ namespace AdventOfCode2023
             return returnWords;
         }
 
-        /*
-                public static int DecodeDay1Part2(string encodedCalibrationValue)
+        public static int DecodeDay1Part2(string encodedCalibrationValue)
+        {
+            Console.WriteLine($"[[ {encodedCalibrationValue} ]]");
+            List<string> tokens = Tokenize(encodedCalibrationValue);
+            Console.WriteLine($"+ Tokenize >> {String.Join(".", tokens)}");
+            List<int> numerals = new List<int>();
+            foreach (string token in tokens)
+            {
+                int number = 0;
+                bool canConvert = Int32.TryParse(token, out number);
+                if (canConvert is true)
                 {
-                    string[] numerals = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", };
-                    char[] numeralsFirstLetters = { 'z', 'o', 't', 'f', 's', 'e', 'n', };
-
-
-
-                    bool foundFirstNumeral = false;
-                    char firstNumeral = (char)0;
-                    char lastNumeral = (char)0;
-                    bool currentCharIsNumeric = false;
-                    string currentNonNumericBuffer = "";
-
-                    foreach (char character in encodedCalibrationValue.ToCharArray())
-                    {
-                        if (character >= (char)48 && character <= (char)57)
-                        {
-                            currentCharIsNumeric = true;
-                            currentNonNumericBuffer = "";
-                            if (foundFirstNumeral is false)
-                            {
-                                foundFirstNumeral = true;
-                                firstNumeral = character;
-                            }
-                            lastNumeral = character;
-                        }
-                        else
-                        {
-                            // Switched to a new non-numeric span; eval buffer
-                            if (currentCharIsNumeric is true)
-                            {
-                                int bufferLength = currentNonNumericBuffer.Length;
-
-                                // Shortest number word is 3 chars long
-                                while (bufferLength >= 3)
-                                {
-                                    char firstLetterOfBuffer = currentNonNumericBuffer[0];
-                                    // First letter isn't a numeral word letter, throw it away
-                                    if (Array.IndexOf(numeralsFirstLetters, firstLetterOfBuffer) < 0)
-                                    {
-                                        currentNonNumericBuffer = currentNonNumericBuffer[1..];
-                                        bufferLength = currentNonNumericBuffer.Length;
-                                        continue;
-                                    }
-                                    // Loop over the numeralWords and see if our buffer starts with one
-                                    for (int wordIndex = 0; wordIndex < numerals.Length; wordIndex++)
-                                    {
-                                        string numeralWord = numerals[wordIndex];
-                                        // Found it!
-                                        if (currentNonNumericBuffer.IndexOf(numeralWord) == 0)
-                                        {
-                                            lastNumeral = (char)(wordIndex + 48);
-                                            currentNonNumericBuffer = currentNonNumericBuffer[numeralWord.Length..];
-                                            bufferLength = currentNonNumericBuffer.Length;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                            currentCharIsNumeric = false;
-                        }
-                    }
-                    if (foundFirstNumeral is false)
-                    {
-                        System.Environment.Exit(1);
-                    }
-                    string calibrationValueString = $"{firstNumeral}{lastNumeral}";
-                    int calibrationValue = Int32.Parse(calibrationValueString);
-                    return calibrationValue;
+                    numerals.Add(number);
+                    Console.WriteLine($"+ Raw Numeral >> [{number}]");
+                    continue;
                 }
-        */
+                List<string> subTokens = ExtractFromString(token);
+                Console.WriteLine($"+ ExtractFromString {token} >> [{String.Join(".", subTokens)}]");
+                foreach (string subToken in subTokens)
+                {
+                    int indexOfSubToken = Array.IndexOf(numeralWords, subToken);
+                    numerals.Add(indexOfSubToken);
+                }
+            }
+            Console.WriteLine($"+ numerals >> {String.Join(".", numerals)}");
+            string calibrationValueString = $"{numerals[0]}{numerals[numerals.Count - 1]}";
+            int calibrationValue = Int32.Parse(calibrationValueString);
+            Console.WriteLine($"{encodedCalibrationValue} >> {calibrationValue}");
+            Console.WriteLine("");
+            return calibrationValue;
+        }
 
     }
 }
