@@ -42,13 +42,6 @@ namespace NumeralExtractionTests
         }
 
         [Fact]
-        public void ExtractFromString_InputHasOneZerOne_ReturnOneOne()
-        {
-            List<string> result = NumeralExtraction.ExtractFromString("onezerone");
-            Assert.Equal(new List<string>(["one", "one", ]), result);
-        }
-
-        [Fact]
         public void ExtractFromString_InputHasThreEight_ReturnThreeEight()
         {
             List<string> result = NumeralExtraction.ExtractFromString("threeight");

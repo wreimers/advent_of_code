@@ -83,16 +83,18 @@ namespace AdventOfCode2023
 
         public static List<string> ExtractFromString(string token)
         {
-            List<string> resultWords = new List<string>();
-            while (true)
-            {
-                string wordMaybe = FirstNumeralWordInString(token);
-                if (wordMaybe == "") break;
-                resultWords.Add(wordMaybe);
-                token = token[(token.IndexOf(wordMaybe) + wordMaybe.Length)..];
+            SortedList<int, string> resultWords = new SortedList<int, string>();
+            foreach (string word in numeralWords) {
+                int workingIndex = 0;
+                while (true)
+                {
+                    int wordIndex = token.IndexOf(word, workingIndex);
+                    if (wordIndex < 0) break;
+                    resultWords.Add(wordIndex, word);
+                    workingIndex = wordIndex+word.Length;
+                }                
             }
-            List<string> returnWords = resultWords.Where(w => w != "").ToList();
-            return returnWords;
+            return resultWords.Values.ToList();
         }
 
         public static int DecodeDay1Part2(string encodedCalibrationValue)
