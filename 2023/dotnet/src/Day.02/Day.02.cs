@@ -14,25 +14,13 @@ while ((gameRecord = reader.ReadLine()) != null)
     inputData.Add(gameRecord);
 }
 
-// Set up game parameters
-Dictionary<string, int> gameParameters = new Dictionary<string, int>
-{
-    {"red", 12},
-    {"green", 13},
-    {"blue", 14},
-};
-Console.WriteLine($"Game Parameters");
-foreach (KeyValuePair<string, int> parameter in gameParameters) {
-    Console.WriteLine($" - {parameter.Key} {parameter.Value}");
-}
-
 // Parse records
-int sumOfPossibleGameNumbers = 0;
+int sumofGamePower = 0;
 char[] splitters = [':', ' ', ',', ';', ];
 foreach (string record in inputData) {
     string[] subStrings = record.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
     int gameNumber = Int32.Parse(subStrings[1]);
-    Console.WriteLine($"Game {gameNumber}");
+    Console.WriteLine($"Game {gameNumber}\n{record}");
     Dictionary<string, int> cubeCounts = new Dictionary<string, int>();
     for (int recordIndex = 2; recordIndex < subStrings.Length; recordIndex += 2) {
         int cubeCount = Int32.Parse(subStrings[recordIndex]);
@@ -47,19 +35,12 @@ foreach (string record in inputData) {
             cubeCounts[cubeColor] = cubeCount;
         }
     }
-    bool gameIsPossible = true;
+    int gamePower = 1;
     foreach (KeyValuePair<string, int> maxCount in cubeCounts) {
         Console.WriteLine($" - {maxCount.Key} {maxCount.Value}");
-        if (gameParameters.ContainsKey(maxCount.Key) is false) {
-            gameIsPossible = false;
-        }
-        else if ( maxCount.Value > gameParameters[maxCount.Key]) {
-            gameIsPossible = false;
-        }
+        gamePower *= maxCount.Value;
     }
-    Console.WriteLine($"This game is possible: {gameIsPossible}");
-    if (gameIsPossible is true) {
-        sumOfPossibleGameNumbers += gameNumber;
-    }
+    Console.WriteLine($"Game power: {gamePower}");
+    sumofGamePower += gamePower;
 }
-Console.WriteLine($"Sum: {sumOfPossibleGameNumbers}");
+Console.WriteLine($"Sum: {sumofGamePower}");
