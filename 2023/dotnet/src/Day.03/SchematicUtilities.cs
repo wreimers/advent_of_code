@@ -127,7 +127,8 @@ public class SchematicLine
     public required string text;
 }
 
-public class PartNumber {
+public class PartNumber
+{
     public required int row { get; set; }
     public required int position { get; set; }
     public List<char> numerals = new List<char>();
