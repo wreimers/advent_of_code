@@ -1,4 +1,4 @@
-namespace Day03Should;
+namespace SchematicUtilitiesShould;
 
 using Xunit;
 
@@ -179,6 +179,7 @@ public class SchematicUtilitiesShould {
         List<PartNumber> testList = SchematicUtilities.FindSymbolAdjacentPartNumbers(currentLine, previousLine);
         // Then
         Assert.Single(testList);
+        Assert.Equal(45, testList[0].number);
     }
 
     [Fact]
