@@ -53,19 +53,11 @@ public class SchematicUtilities
         var symbolAdjacentPartNumbers = new List<PartNumber>();
         (List<PartNumber> parts, List<SchematicSymbol> symbols) currentLineContents  = ParseSchematicLine(currentLine);
         (List<PartNumber> parts, List<SchematicSymbol> symbols) previousLineContents = ParseSchematicLine(previousLine);
-        // Console.WriteLine($"prev text ({previousLine.row}) {previousLine.text}");
-        // Console.WriteLine($"prev syms ({previousLine.row}) {String.Join(" ", previousLineContents.symbols)}");
-        // Console.WriteLine($"prev ptno ({previousLine.row}) {String.Join(" ", previousLineContents.parts)}");
-        // Console.WriteLine($"curr text ({currentLine.row}) {currentLine.text}");
-        // Console.WriteLine($"curr syms ({currentLine.row}) {String.Join(" ", currentLineContents.symbols)}");
-        // Console.WriteLine($"curr ptno ({currentLine.row}) {String.Join(" ", currentLineContents.parts)}");
 
         foreach (SchematicSymbol symbol in currentLineContents.symbols)
         {
-            // Console.WriteLine($"test symb ({currentLine.row}) {symbol}");
             foreach (PartNumber pn in currentLineContents.parts)
             {
-                // Console.WriteLine($"test curr ({currentLine.row}) {pn}");
                 if (pn.occupies(symbol.position-1) || pn.occupies(symbol.position+1))
                 {
                     if (pn.symbolAdjacent is false) {
@@ -75,7 +67,6 @@ public class SchematicUtilities
                 }
             }
             foreach (PartNumber pn in previousLineContents.parts) {
-                // Console.WriteLine($"test prev ({previousLine.row}) {pn}");
                 if (pn.occupies(symbol.position-1) || pn.occupies(symbol.position) || pn.occupies(symbol.position+1))
                 {
                     if (pn.symbolAdjacent is false) {
@@ -87,10 +78,8 @@ public class SchematicUtilities
         }
 
         foreach (SchematicSymbol symbol in previousLineContents.symbols) {
-            // Console.WriteLine($"test symb ({previousLine.row}) {symbol}");
             foreach (PartNumber pn in currentLineContents.parts)
             {
-                // Console.WriteLine($"test curr ({currentLine.row}) {pn}");
                 if (pn.occupies(symbol.position-1) || pn.occupies(symbol.position) || pn.occupies(symbol.position+1))
                 {
                     if (pn.symbolAdjacent is false) {
