@@ -8,7 +8,17 @@ namespace Day04
 
         static void Main(string[] args)
         {
-            Main_Day4_Part1(args);
+            Main_Day4_Part2(args);
+        }
+
+        static void Main_Day4_Part2(string[] args) 
+        {
+            Console.WriteLine("Advent of Code 2023 Day 4 Part 2");
+            using StreamReader reader = new("var/day_04/input.txt");
+            while ((rawLine = reader.ReadLine()) != null)
+            {
+                
+            }
         }
 
         static void Main_Day4_Part1(string[] args)
