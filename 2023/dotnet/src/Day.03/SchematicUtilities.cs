@@ -2,10 +2,9 @@
 public class SchematicUtilities 
 {
 
-    public static (List<PartNumber>, List<SchematicSymbol>) ParseSchematicLine(SchematicLine line) 
+    public static SchematicLineContents ParseSchematicLine(SchematicLine line) 
     {
-        var partNumbers =  new List<PartNumber>();
-        var symbols = new List<SchematicSymbol>();
+        var contents =  new SchematicLineContents { line = line, };
 
         PartNumber? currentPartNumber = null;
         char[] chars = line.text.ToCharArray();
@@ -20,12 +19,12 @@ public class SchematicUtilities
                         row=line.row, 
                         position=position,
                     };
-                    partNumbers.Add(currentPartNumber);
+                    contents.parts.Add(currentPartNumber);
                 }
                 currentPartNumber.numerals.Add(currentChar);
                 currentPartNumber.positions.Add(position);
             }
-            else  if (currentChar == '.')
+            else if (currentChar == '.')
             {
                 if (currentPartNumber is not null) 
                 {
@@ -38,21 +37,27 @@ public class SchematicUtilities
                 {
                     currentPartNumber = null;
                 }
-                symbols.Add(new SchematicSymbol {
+                if (currentChar == '*') {
+                    contents.gears.Add(new Gear {
+                        row = line.row,
+                        position=position,
+                    });
+                }
+                contents.symbols.Add(new SchematicSymbol {
                     row=line.row, 
                     position=position, 
                     glyph=currentChar,
                 });
             }
         }
-        return (partNumbers, symbols);
+        return contents;
     }
 
     public static List<PartNumber> FindSymbolAdjacentPartNumbers(SchematicLine currentLine, SchematicLine previousLine)
     {
         var symbolAdjacentPartNumbers = new List<PartNumber>();
-        (List<PartNumber> parts, List<SchematicSymbol> symbols) currentLineContents  = ParseSchematicLine(currentLine);
-        (List<PartNumber> parts, List<SchematicSymbol> symbols) previousLineContents = ParseSchematicLine(previousLine);
+        SchematicLineContents currentLineContents  = ParseSchematicLine(currentLine);
+        SchematicLineContents previousLineContents = ParseSchematicLine(previousLine);
 
         foreach (SchematicSymbol symbol in currentLineContents.symbols)
         {
@@ -96,6 +101,14 @@ public class SchematicUtilities
 
 }
 
+public class SchematicLineContents
+{
+        public required SchematicLine line { get; set; }
+        public List<PartNumber> parts =  new List<PartNumber>();
+        public List<SchematicSymbol> symbols = new List<SchematicSymbol>();
+        public List<Gear> gears = new List<Gear>();
+}
+
 public class SchematicSymbol 
 {
     public SchematicSymbol() { }
@@ -114,6 +127,20 @@ public class SchematicLine
     public SchematicLine() { }
     public required int row;
     public required string text;
+}
+
+public class Gear 
+{
+    public Gear() { }
+    public required int row;
+    public required int position;
+    public char glyph = '*';
+    public List<PartNumber> adjacentParts = new List<PartNumber>();
+
+    public override string? ToString()
+    {
+        return $"<{row}:{position}>{glyph}";
+    }
 }
 
 public class PartNumber
@@ -136,16 +163,6 @@ public class PartNumber
                 result = $"{result}{n}";
             }
             return Int32.Parse(result);
-        }
-    }
-
-    public string index {
-        get {
-            string result= "";
-            foreach (int n in this.positions) {
-                result = $"{result}.{n}";
-            }
-            return result;
         }
     }
 

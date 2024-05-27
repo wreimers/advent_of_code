@@ -14,23 +14,22 @@ public class SchematicUtilitiesShould {
         // When
         var result = SchematicUtilities.ParseSchematicLine(schematicLine);
         // Then
-        Assert.Empty(result.Item1);
-        Assert.Empty(result.Item2);
+        Assert.Empty(result.parts);
+        Assert.Empty(result.symbols);
+        Assert.Empty(result.gears);
     }
 
     [Fact]
     public void ParseSchematicLine_OneSymbol_SingleSecondItem()
     {
         // Given
-        SchematicLine schematicLine = new SchematicLine {
-            text = "...*......",
-            row = 0,
-        };
+        SchematicLine schematicLine = new SchematicLine { text = "...*......", row = 0, };
         // When
         var result = SchematicUtilities.ParseSchematicLine(schematicLine);
         // Then
-        Assert.Empty(result.Item1);
-        Assert.Single(result.Item2);
+        Assert.Empty(result.parts);
+        Assert.Single(result.symbols);
+        Assert.Single(result.gears);
     }
 
     [Fact]
@@ -44,8 +43,9 @@ public class SchematicUtilitiesShould {
         // When
         var result = SchematicUtilities.ParseSchematicLine(schematicLine);
         // Then
-        Assert.Single(result.Item1);
-        Assert.Empty(result.Item2);
+        Assert.Single(result.parts);
+        Assert.Empty(result.symbols);
+        Assert.Empty(result.gears);
     }
 
     [Fact]
@@ -59,8 +59,9 @@ public class SchematicUtilitiesShould {
         // When
         var result = SchematicUtilities.ParseSchematicLine(schematicLine);
         // Then
-        Assert.Equal(2, result.Item1.Count);
-        Assert.Empty(result.Item2);
+        Assert.Equal(2, result.parts.Count);
+        Assert.Empty(result.symbols);
+        Assert.Empty(result.gears);
     }
 
     [Fact]
@@ -74,8 +75,9 @@ public class SchematicUtilitiesShould {
         // When
         var result = SchematicUtilities.ParseSchematicLine(schematicLine);
         // Then
-        Assert.Equal(2, result.Item1.Count);
-        Assert.Single(result.Item2);
+        Assert.Equal(2, result.parts.Count);
+        Assert.Single(result.symbols);
+        Assert.Empty(result.gears);
     }
 
     [Fact]
