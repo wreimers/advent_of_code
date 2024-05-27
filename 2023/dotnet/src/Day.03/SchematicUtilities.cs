@@ -135,6 +135,7 @@ public class Gear
     public required int row;
     public required int position;
     public char glyph = '*';
+    public List<PartNumber> adjacentParts = new List<PartNumber>();
 
     public override string? ToString()
     {
