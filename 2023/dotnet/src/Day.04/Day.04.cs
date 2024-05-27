@@ -14,7 +14,7 @@ namespace Day04
         static void Main_Day4_Part2(string[] args) 
         {
             Console.WriteLine("Advent of Code 2023 Day 4 Part 2");
-            using StreamReader reader = new("var/day_04/sample.txt");
+            using StreamReader reader = new("var/day_04/input.txt");
             int row = 1;
             string? rawLine;
             var gameCards = new List<GameCard>();
