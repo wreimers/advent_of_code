@@ -139,16 +139,6 @@ public class PartNumber
         }
     }
 
-    public string index {
-        get {
-            string result= "";
-            foreach (int n in this.positions) {
-                result = $"{result}.{n}";
-            }
-            return result;
-        }
-    }
-
     public bool occupies(int position) {
         return this.positions.Contains(position);
     }
