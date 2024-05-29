@@ -1,0 +1,105 @@
+﻿using System;
+using System.Reflection.PortableExecutable;
+using System.Runtime.CompilerServices;
+
+namespace Day05
+{
+    internal class Program
+    {
+
+        static void Main(string[] args)
+        {
+            Main_Day5_Part1(args);
+        }
+
+        static void Main_Day5_Part1(string[] args) 
+        {
+            Console.WriteLine("Advent of Code 2023 Day 5 Part 1");
+            using StreamReader reader = new("var/day_05/input.txt");
+            double row = 1;
+            string? rawLine;
+            var seedNumbers = new List<string>();
+            var almanacMaps = new List<AlmanacMap>();
+            var almanacMapsLeftover = new List<AlmanacMap>();
+            AlmanacMap? currentMap = null;
+            
+            while ((rawLine = reader.ReadLine()) != null)
+            {
+                if (row==1) {
+                    char[] splitters = [' ', ];
+                    string[] seedTokens = rawLine.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                    seedNumbers.AddRange(seedTokens[1..].ToList());
+                    Console.WriteLine($"({row}) seeds {String.Join(", ", seedNumbers)}");
+                }
+                else if (rawLine == "") {
+                    currentMap = null;
+                }
+                else if (currentMap is null) {
+                    char[] splitters = ['-', ' ', ];
+                    string[] mapTokens = rawLine.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                    string srcCategory = mapTokens[0];
+                    string dstCategory = mapTokens[2];
+                    currentMap = new AlmanacMap {row=row, srcCategory=srcCategory, dstCategory=dstCategory};
+                    almanacMaps.Add(currentMap);
+                    Console.WriteLine($"({row}) {currentMap}");
+                }
+                else if (currentMap is not null) {
+                    char[] splitters = [' ', ];
+                    string[] rangeTokens = rawLine.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                    double dstRangeStart = Int64.Parse(rangeTokens[0]);
+                    double srcRangeStart = Int64.Parse(rangeTokens[1]);
+                    double rangeLength = Int64.Parse(rangeTokens[2]);
+                    var mapEntry = new MapEntry() {row=row, dstRangeStart=dstRangeStart, srcRangeStart=srcRangeStart, rangeLength=rangeLength};
+                    currentMap.entries.Add(mapEntry);
+                    Console.WriteLine($"({row}) {mapEntry}");
+                }
+                else {
+                    Console.WriteLine($"({row}) {rawLine}");
+                }
+                row += 1;
+            }
+            var locationNumbers = new List<double>();
+            foreach (string number in seedNumbers) {
+                double currentValue = Int64.Parse(number);
+                string currentCategory = "seed";
+                string finalCategory = "location";
+                // string trackCategory = currentCategory;
+                // bool finalLoop = false;
+                while (true)
+                {
+                    // Console.WriteLine($"category {currentCategory}");
+                    foreach (AlmanacMap map in almanacMaps)
+                    {
+                        // todo track the currentValue to detect success
+                        if (map.srcCategory == currentCategory)
+                        {
+                            Console.WriteLine($"category {currentCategory} {currentValue}");
+                            foreach (MapEntry entry in map.entries)
+                            {
+                                if (currentValue >= entry.srcRangeStart && currentValue <= entry.srcRangeStart + entry.rangeLength)
+                                {
+                                    double offset = entry.srcRangeStart + entry.rangeLength - currentValue;
+                                    currentValue = entry.dstRangeStart + entry.rangeLength - offset;
+                                    break;
+                                }
+                            }
+                            currentCategory = map.dstCategory;
+                            break;
+                        }
+                    }
+                    Console.WriteLine($"next category {currentCategory} {currentValue}");
+                    if (currentCategory == finalCategory)
+                    {
+                        locationNumbers.Add(currentValue);
+                        Console.WriteLine($">> LOCATION {currentValue}");
+                        break;
+                    }
+                }
+            }
+            double closestLocation = locationNumbers.Min();
+            Console.WriteLine($">> >> minimum location {closestLocation}");
+        }
+        
+
+    }
+}
