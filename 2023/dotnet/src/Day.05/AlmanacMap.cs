@@ -1,3 +1,13 @@
+public class Seed
+{
+    required public double rangeStart {get; set;}
+    required public double rangeLength {get; set;}
+    public override string? ToString()
+    {
+        return $"{rangeStart}:{rangeLength}";
+    }
+}
+
 public class MapEntry
 {
     public required double row {get; set;}
