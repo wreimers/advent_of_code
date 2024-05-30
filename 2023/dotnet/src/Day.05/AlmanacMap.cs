@@ -1,3 +1,4 @@
+
 public class Seed
 {
     required public double rangeStart {get; set;}

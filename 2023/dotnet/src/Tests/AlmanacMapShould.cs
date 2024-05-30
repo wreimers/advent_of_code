@@ -30,5 +30,6 @@ namespace AlmanacMapShould
             // Then
             Assert.NotEqual(mapOne, mapTwo);
         }
+
     }
 }

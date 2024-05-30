@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
+using System.Text.Unicode;
 
 namespace Day05
 {
@@ -65,41 +66,44 @@ namespace Day05
             var locationNumbers = new List<double>();
             foreach (Seed seed in seeds)
             {
-                for (double k=seed.rangeStart; k<seed.rangeStart+seed.rangeLength; k+=1)
+                string currentCategory = "seed";
+                string finalCategory = "location";
+
+                while (true)
                 {
-                    double currentValue = k;
-                    string currentCategory = "seed";
-                    string finalCategory = "location";
-                    while (true)
+                    foreach (AlmanacMap map in almanacMaps)
                     {
-                        foreach (AlmanacMap map in almanacMaps)
+                        if (map.srcCategory == currentCategory)
                         {
-                            if (map.srcCategory == currentCategory)
+                            foreach (MapEntry entry in map.entries)
                             {
-                                Console.WriteLine($"category {currentCategory} {currentValue}");
-                                foreach (MapEntry entry in map.entries)
-                                {
-                                    if (currentValue >= entry.srcRangeStart && currentValue <= entry.srcRangeStart + entry.rangeLength)
-                                    {
-                                        double offset = entry.srcRangeStart + entry.rangeLength - currentValue;
-                                        currentValue = entry.dstRangeStart + entry.rangeLength - offset;
-                                        break;
-                                    }
-                                }
-                                currentCategory = map.dstCategory;
-                                break;
+                                // if (Utilities.RangesOverlap(
+                                //     new CategoryRange {start=seed.rangeStart, length=seed.rangeLength},
+                                //     new CategoryRange {start=entry.srcRangeStart, length=entry.rangeLength}
+                                // ))
+                                // {
+                                //     double mappedValue = Utilities.MapValue(entry, seed.)
+                                // }
+                                
+                                //     double currentValue = 0;
+                                //     for (double k=seedRangeStart; k<seedRangeStart+seed.rangeLength; k+=1)
+                                //     {
+                                //         currentValue = k;
+                                //         if (currentValue >= entryRangeStart && currentValue <= entryRangeStart + entry.rangeLength)
+                                //         {
+                                //             double offset = entryRangeStart + entry.rangeLength - currentValue;
+                                //             currentValue = entry.dstRangeStart + entry.rangeLength - offset;
+                                //             break;
+                                //         }
+                                //     }
+                                    
+                                // }
                             }
-                        }
-                        Console.WriteLine($"next category {currentCategory} {currentValue}");
-                        if (currentCategory == finalCategory)
-                        {
-                            locationNumbers.Add(currentValue);
-                            Console.WriteLine($">> LOCATION {currentValue}");
-                            break;
                         }
                     }
                 }
             }
+
             double closestLocation = locationNumbers.Min();
             Console.WriteLine($">> >> minimum location {closestLocation}");
         }
