@@ -1,25 +1,42 @@
 public class Hand
 {
-
-    public required string hand {get; set; }
-    public required double bid {get; set; }
     public static char[] cardRanks = ['2','3','4','5','6','7','8','9','T','J','Q','K','A'];
     public static string[] handRanks = ["highcard","1pair","2pair","3kind","fullhouse","4kind","5kind"];
-    private int[]? _cardsInHandRanks = null;
-    public string Kind()
+
+    private string _cards = "";
+    public required double bid {get; set; }
+    private int[] _cardsInHandRanks = new int[5];
+    public required string cards
     {
-        // Console.WriteLine($"hand {hand}");
-        if (_cardsInHandRanks is null) {
-            // Console.WriteLine($"_cardsInHandRanks compose");
-            _cardsInHandRanks = new int[5];
-            char[] cards = hand.ToCharArray();
-            // Console.WriteLine($"cards {String.Join(", ", cards.ToList())}");
+        get { return _cards; }
+
+        set
+        {
+            char[] cardsCharArray = value.ToCharArray();
             for (int c=0; c<5; c+=1) 
             {
-                var result = Array.IndexOf(cardRanks, cards[c]);
-                _cardsInHandRanks[c] = Array.IndexOf(cardRanks, cards[c]);
+                var result = Array.IndexOf(cardRanks, cardsCharArray[c]);
+                _cardsInHandRanks[c] = Array.IndexOf(cardRanks, cardsCharArray[c]);
             }
+            // Console.WriteLine($"value {value}");
+            // Console.WriteLine($"cardsInHandRanks {String.Join(", ", _cardsInHandRanks)}");
+            // Array.Sort(_cardsInHandRanks);
+            // Console.WriteLine($"sorted _cardsInHandRanks {String.Join(", ", _cardsInHandRanks)}");
+            _cards = value;
         }
+    }
+
+    public string kind
+    {
+        get {
+            return Kind();
+        }
+        set {}
+    }
+
+    public string Kind()
+    {
+        // Console.WriteLine($"cards {cards}");
         // Console.WriteLine($"_cardsInHandRanks {String.Join(", ", _cardsInHandRanks)}");
         int[] frequencies = new int[13];
         int highFrequency = 0;
@@ -37,7 +54,13 @@ public class Hand
                 highFrequency = result;
                 highFrequencyRank = k;
             }
+            else if (result >= highFrequencySecond) {
+                highFrequencySecond = result;
+                highFrequencySecondRank = k;
+            }
             // Console.WriteLine($"rank {k} frequency {result}");
+            // Console.WriteLine($"highFrequencyRank {highFrequencyRank} highFrequency {highFrequency}");
+            // Console.WriteLine($"highFrequencySecondRank {highFrequencySecondRank} highFrequencySecond {highFrequencySecond}");
         }
         if (highFrequency == 5) {
             return "5kind";
@@ -58,6 +81,33 @@ public class Hand
             return "1pair";
         }
         return "highcard";
+    }
+
+    public int rank
+    {
+        get {
+            return Array.IndexOf(handRanks, Kind());
+        }
+        set {}
+    }
+
+    public static Hand BetterHand(Hand leftHand, Hand rightHand)
+    {
+        if (leftHand.rank > rightHand.rank)
+        {
+            return leftHand;
+        }
+        else if (leftHand.rank < rightHand.rank)
+        {
+            return rightHand;
+        }
+        else if (leftHand.cards == rightHand.cards)
+        {
+            return leftHand;
+        }
+        else {
+            return leftHand;
+        }
     }
 
 }

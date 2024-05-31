@@ -8,10 +8,10 @@ namespace HandShould
     {
 
         [Fact]
-        public void HandShould_FiveAces_5kind()
+        public void HandShould_Kind_AAAAA_5kind()
         {
             // Given
-            var hand = new Hand {hand="AAAAA", bid=0};
+            var hand = new Hand {cards="AAAAA", bid=0};
             // When
             var result = hand.Kind();
             // Then
@@ -19,10 +19,10 @@ namespace HandShould
         }
 
         [Fact]
-        public void HandShould_FourAces_4kind()
+        public void HandShould_Kind_7AAAA_4kind()
         {
             // Given
-            var hand = new Hand {hand="7AAAA", bid=0};
+            var hand = new Hand {cards="7AAAA", bid=0};
             // When
             var result = hand.Kind();
             // Then
@@ -30,10 +30,10 @@ namespace HandShould
         }
 
         [Fact]
-        public void HandShould_ThreeAcesTwoTwos_Fullhouse()
+        public void HandShould_Kind_2A2AA_Fullhouse()
         {
             // Given
-            var hand = new Hand {hand="2A2AA", bid=0};
+            var hand = new Hand {cards="2A2AA", bid=0};
             // When
             var result = hand.Kind();
             // Then
@@ -41,10 +41,21 @@ namespace HandShould
         }
 
         [Fact]
-        public void HandShould_ThreeFives_3kind()
+        public void HandShould_Kind_QQJJJ_Fullhouse()
         {
             // Given
-            var hand = new Hand {hand="5A5J5", bid=0};
+            var hand = new Hand {cards="QQJJJ", bid=0};
+            // When
+            var result = hand.Kind();
+            // Then
+            Assert.Equal("fullhouse", result);
+        }
+
+        [Fact]
+        public void HandShould_Kind_5A5J5_3kind()
+        {
+            // Given
+            var hand = new Hand {cards="5A5J5", bid=0};
             // When
             var result = hand.Kind();
             // Then
@@ -52,10 +63,10 @@ namespace HandShould
         }
 
         [Fact]
-        public void HandShould_TwoFivesTwoSixes_2pair()
+        public void HandShould_Kind_6655K_2pair()
         {
             // Given
-            var hand = new Hand {hand="6655K", bid=0};
+            var hand = new Hand {cards="6655K", bid=0};
             // When
             var result = hand.Kind();
             // Then
@@ -63,10 +74,10 @@ namespace HandShould
         }
 
         [Fact]
-        public void HandShould_TwoJacks_1pair()
+        public void HandShould_Kind_1JJKQ_1pair()
         {
             // Given
-            var hand = new Hand {hand="1JJKQ", bid=0};
+            var hand = new Hand {cards="1JJKQ", bid=0};
             // When
             var result = hand.Kind();
             // Then
@@ -74,14 +85,50 @@ namespace HandShould
         }
 
         [Fact]
-        public void HandShould_Straight_Highcard()
+        public void HandShould_Kind_56789_Highcard()
         {
             // Given
-            var hand = new Hand {hand="56789", bid=0};
+            var hand = new Hand {cards="56789", bid=0};
             // When
             var result = hand.Kind();
             // Then
             Assert.Equal("highcard", result);
+        }
+
+        [Fact]
+        public void HandShould_BetterHand_L5kindR4kind_LeftHand()
+        {
+            // Given
+            var leftHand  = new Hand {cards="22222", bid=0};
+            var rightHand = new Hand {cards="AAAAK", bid=0};
+            // When
+            var result = Hand.BetterHand(leftHand, rightHand);
+            // Then
+            Assert.Equal(leftHand, result);
+        }
+
+        [Fact]
+        public void HandShould_BetterHand_L3kindR4kind_RightHand()
+        {
+            // Given
+            var leftHand  = new Hand {cards="7477A", bid=0};
+            var rightHand = new Hand {cards="AAAAK", bid=0};
+            // When
+            var result = Hand.BetterHand(leftHand, rightHand);
+            // Then
+            Assert.Equal(rightHand, result);
+        }
+
+        [Fact]
+        public void HandShould_BetterHand_LFullHouse63RFullHouseJQ_RightHand()
+        {
+            // Given
+            var leftHand  = new Hand {cards="66363", bid=0};
+            var rightHand = new Hand {cards="QQJJJ", bid=0};
+            // When
+            var result = Hand.BetterHand(leftHand, rightHand);
+            // Then
+            Assert.Equal(rightHand, result);
         }
 
     }
