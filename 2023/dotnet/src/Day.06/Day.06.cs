@@ -8,7 +8,35 @@ namespace Day06
     {
         static void Main(string[] args)
         {
-            Main_Day6_Part1(args);
+            Main_Day6_Part2(args);
+        }
+
+        static void Main_Day6_Part2(string[] args) 
+        {
+            Console.WriteLine("Advent of Code 2023 Day 6 Part 2");
+
+            // Time:      7  15   30
+            // Distance:  9  40  200
+            // Time:      71530
+            // Distance:  940200
+            var races = new List<Race>();
+            races.Add(new Race {time=71530, distance=940200});
+
+            double product = 1;
+            foreach(Race race in races) {
+                var winningTimes = new List<double>();
+                for (double time=0; time<race.time; time += 1) {
+                    double travelTime = race.time - time;
+                    double velocity = time;
+                    double travelDistance = travelTime * velocity;
+                    if (travelDistance > race.distance) {
+                        winningTimes.Add(time);
+                    }
+                }
+                product *= winningTimes.Count;
+                Console.WriteLine($"winningTimes {String.Join(", ", winningTimes)}");
+                Console.WriteLine($"product      {product}");
+            }
         }
 
         static void Main_Day6_Part1(string[] args) 
