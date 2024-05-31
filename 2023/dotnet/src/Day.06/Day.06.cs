@@ -15,12 +15,12 @@ namespace Day06
         {
             Console.WriteLine("Advent of Code 2023 Day 6 Part 2");
 
-            // Time:      7  15   30
-            // Distance:  9  40  200
-            // Time:      71530
-            // Distance:  940200
+            // Time:        57     72     69     92
+            // Distance:   291   1172   1176   2026
+            // Time:      57726992
+            // Distance:  291117211762026
             var races = new List<Race>();
-            races.Add(new Race {time=71530, distance=940200});
+            races.Add(new Race {time=57726992, distance=291117211762026});
 
             double product = 1;
             foreach(Race race in races) {
@@ -34,7 +34,7 @@ namespace Day06
                     }
                 }
                 product *= winningTimes.Count;
-                Console.WriteLine($"winningTimes {String.Join(", ", winningTimes)}");
+                // Console.WriteLine($"winningTimes {String.Join(", ", winningTimes)}");
                 Console.WriteLine($"product      {product}");
             }
         }
