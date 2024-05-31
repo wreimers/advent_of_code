@@ -15,12 +15,13 @@ namespace Day06
         {
             Console.WriteLine("Advent of Code 2023 Day 6 Part 1");
 
-            // Time:      7  15   30
-            // Distance:  9  40  200
+            // Time:        57     72     69     92
+            // Distance:   291   1172   1176   2026
             var races = new List<Race>();
-            races.Add(new Race {time=7, distance=9});
-            races.Add(new Race {time=15, distance=40});
-            races.Add(new Race {time=30, distance=200});
+            races.Add(new Race {time=57, distance=291});
+            races.Add(new Race {time=72, distance=1172});
+            races.Add(new Race {time=69, distance=1176});
+            races.Add(new Race {time=92, distance=2026});
 
             double product = 1;
             foreach(Race race in races) {
