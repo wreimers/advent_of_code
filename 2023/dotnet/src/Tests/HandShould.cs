@@ -13,7 +13,7 @@ namespace HandShould
             // Given
             var hand = new Hand {cards="AAAAA", bid=0};
             // When
-            var result = hand.Kind();
+            var result = hand.kind;
             // Then
             Assert.Equal("5kind", result);
         }
@@ -24,7 +24,7 @@ namespace HandShould
             // Given
             var hand = new Hand {cards="7AAAA", bid=0};
             // When
-            var result = hand.Kind();
+            var result = hand.kind;
             // Then
             Assert.Equal("4kind", result);
         }
@@ -35,7 +35,7 @@ namespace HandShould
             // Given
             var hand = new Hand {cards="2A2AA", bid=0};
             // When
-            var result = hand.Kind();
+            var result = hand.kind;
             // Then
             Assert.Equal("fullhouse", result);
         }
@@ -46,7 +46,7 @@ namespace HandShould
             // Given
             var hand = new Hand {cards="QQJJJ", bid=0};
             // When
-            var result = hand.Kind();
+            var result = hand.kind;
             // Then
             Assert.Equal("fullhouse", result);
         }
@@ -57,7 +57,7 @@ namespace HandShould
             // Given
             var hand = new Hand {cards="5A5J5", bid=0};
             // When
-            var result = hand.Kind();
+            var result = hand.kind;
             // Then
             Assert.Equal("3kind", result);
         }
@@ -68,7 +68,7 @@ namespace HandShould
             // Given
             var hand = new Hand {cards="6655K", bid=0};
             // When
-            var result = hand.Kind();
+            var result = hand.kind;
             // Then
             Assert.Equal("2pair", result);
         }
@@ -79,7 +79,7 @@ namespace HandShould
             // Given
             var hand = new Hand {cards="1JJKQ", bid=0};
             // When
-            var result = hand.Kind();
+            var result = hand.kind;
             // Then
             Assert.Equal("1pair", result);
         }
@@ -90,7 +90,7 @@ namespace HandShould
             // Given
             var hand = new Hand {cards="56789", bid=0};
             // When
-            var result = hand.Kind();
+            var result = hand.kind;
             // Then
             Assert.Equal("highcard", result);
         }
@@ -129,6 +129,41 @@ namespace HandShould
             var result = Hand.BetterHand(leftHand, rightHand);
             // Then
             Assert.Equal(rightHand, result);
+        }
+
+        [Fact]
+        public void HandShould_BetterHand_LKK677RKTJJT_LeftHand()
+        {
+            // Given
+            var leftHand  = new Hand {cards="KK677", bid=0};
+            var rightHand = new Hand {cards="KTJJT", bid=0};
+            // When
+            var result = Hand.BetterHand(leftHand, rightHand);
+            // Then
+            Assert.Equal(leftHand, result);
+        }
+
+        [Fact]
+        public void HandShould_BetterHand_LKTJJTRKK677_RightHand()
+        {
+            // Given
+            var leftHand  = new Hand {cards="KTJJT", bid=0};
+            var rightHand = new Hand {cards="KK677", bid=0};
+            // When
+            var result = Hand.BetterHand(leftHand, rightHand);
+            // Then
+            Assert.Equal(rightHand, result);
+        }
+
+        [Fact]
+        public void HandShould_sortedHand_KTJJT_KTTJJ()
+        {
+            // Given
+            var hand  = new Hand {cards="KTJJT", bid=0};
+            // When
+            var result = hand.sortedHand;
+            // Then
+            Assert.Equal(new int[] {11, 8, 8, 9, 9}, result);
         }
 
     }
