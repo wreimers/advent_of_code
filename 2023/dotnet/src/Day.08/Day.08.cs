@@ -15,10 +15,14 @@ namespace Day08
         {
             Console.WriteLine("Advent of Code 2023 Day 8 Part 2");
             var networkNodes = new Dictionary<string, NetworkNode>();
-            
+            var nodesEndingWithA = new List<NetworkNode>();
             string? rawLine;
-            using StreamReader reader = new("var/day_08/input.txt");
+            using StreamReader reader = new("var/day_08/sample3.txt");
             string? rawInstructions = reader.ReadLine();
+            if (rawInstructions is null)
+            {
+                throw new Exception("WHY IS RAWINSTRUCTIONS NULL");
+            }
             var instructions = rawInstructions.ToCharArray().ToList();
             while ((rawLine = reader.ReadLine()) != null)
             {
@@ -34,32 +38,57 @@ namespace Day08
                 string right = tokens[2];
                 NetworkNode node = new NetworkNode {name=name, left=left, right=right};
                 networkNodes[name] = node;
+                if (name.EndsWith("A")) {
+                    nodesEndingWithA.Add(node);
+                }
             }
-
-            var currentNode = "AAA";
-            var targetNode = "ZZZ";
+            var currentNodes = nodesEndingWithA;
+            bool finishState = false;
             int steps = 0;
             int instructionIndex = 0;
-            while (currentNode != targetNode) {
-                Console.WriteLine($"currentNode {currentNode}");
+            while (true) {
+                finishState = true;
+                for (int i=0; i<currentNodes.Count; i+=1)
+                {
+                    var node = currentNodes[i];
+                    if (node.name == node.left && node.name == node.right)
+                    {
+                        throw new Exception("REACHED LEAF NODE");
+                    }
+                    if (! node.name.EndsWith("Z"))
+                    {
+                        Console.WriteLine($"node {node.name} disqualifies finishState");
+                        finishState = false;
+                        break;
+                    }
+                }
+                
+                if (finishState is true)
+                {
+                    break;
+                }
                 steps += 1;
-                var node = networkNodes[currentNode];
                 if (instructionIndex == instructions.Count)
                 {
                     instructionIndex = 0;
                 }
-                var instruction = instructions[instructionIndex];
+                for (int i=0; i<currentNodes.Count; i+=1)
+                {
+                    var node = currentNodes[i];
+                    Console.WriteLine($"node {node.name} traverse");
+                    var instruction = instructions[instructionIndex];
+                    if (instruction == 'L')
+                    {
+                        currentNodes[i] = networkNodes[node.left];
+                        Console.WriteLine($"going left to {node.left}");
+                    }
+                    if (instruction == 'R')
+                    {
+                        currentNodes[i] = networkNodes[node.right];
+                        Console.WriteLine($"going right to {node.right}");
+                    }
+                }
                 instructionIndex += 1;
-                if (instruction == 'L')
-                {
-                    currentNode = node.left;
-                    Console.WriteLine($"going left to {node.left}");
-                }
-                else if (instruction == 'R')
-                {
-                    currentNode = node.right;
-                    Console.WriteLine($"going right to {node.right}");
-                }
             }
             Console.WriteLine($"steps {steps}");
         }
@@ -72,6 +101,10 @@ static void Main_Day8_Part1(string[] args)
             string? rawLine;
             using StreamReader reader = new("var/day_08/input.txt");
             string? rawInstructions = reader.ReadLine();
+            if (rawInstructions is null)
+            {
+                throw new Exception("WHY IS RAWINSTRUCTIONS NULL");
+            }
             var instructions = rawInstructions.ToCharArray().ToList();
             while ((rawLine = reader.ReadLine()) != null)
             {
