@@ -17,7 +17,7 @@ namespace Day08
             var networkNodes = new Dictionary<string, NetworkNode>();
             
             string? rawLine;
-            using StreamReader reader = new("var/day_08/sample2.txt");
+            using StreamReader reader = new("var/day_08/input.txt");
             string? rawInstructions = reader.ReadLine();
             var instructions = rawInstructions.ToCharArray().ToList();
             while ((rawLine = reader.ReadLine()) != null)
