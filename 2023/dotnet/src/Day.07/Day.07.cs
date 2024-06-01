@@ -23,7 +23,7 @@ namespace Day07
             Console.WriteLine("Advent of Code 2023 Day 7 Part 1");
             var hands = new List<Hand>();
             string? rawLine;
-            using StreamReader reader = new("var/day_07/sample.txt");
+            using StreamReader reader = new("var/day_07/input.txt");
             while ((rawLine = reader.ReadLine()) != null)
             {
                 Console.WriteLine($"{rawLine}");
