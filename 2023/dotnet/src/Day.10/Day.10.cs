@@ -11,7 +11,7 @@ namespace Day06
             Main_Day10(args);
         }
 
-        static void Main_Day10(string[] args) 
+        static void Main_Day10(string[] args)
         {
             Console.WriteLine("Advent of Code 2023 Day 10");
             string? rawLine;
@@ -23,7 +23,8 @@ namespace Day06
             int[][] grid = new int[n][];
             while ((rawLine = reader.ReadLine()) != null)
             {
-                if (row == 0) {
+                if (row == 0)
+                {
                     n = rawLine.Length;
                     grid = new int[n][];
                 }
@@ -32,14 +33,16 @@ namespace Day06
                 foreach (char c in rawLine.ToCharArray())
                 {
                     grid[row][col] = c;
-                    if (c == 'S') {
+                    if (c == 'S')
+                    {
                         animalRow = row;
                         animalCol = col;
                     }
                     col += 1;
                 }
+                Console.WriteLine($"{rawLine}");
             }
-            
+
         }
     }
 
