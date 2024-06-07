@@ -15,7 +15,7 @@ namespace Day10
         {
             Console.WriteLine("Advent of Code 2023 Day 10");
             string? rawLine;
-            using StreamReader reader = new("var/day_10/sample.txt");
+            using StreamReader reader = new("var/day_10/input.txt");
             int row = 0;
             int n = 0;
             int animalRow = -1;
