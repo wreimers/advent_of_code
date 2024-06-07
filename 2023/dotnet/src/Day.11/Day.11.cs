@@ -31,8 +31,17 @@ namespace Day11
                 Console.WriteLine($"{String.Join("", grid[row-1].ToList())}");
             }
             // expand rows
-            for (int row=0; row<grid.Rank; row+=1) {
-                
+            int extraRows = 0;
+            char[][] newGrid = new char[grid.Rank][];
+            for( row=0; row<grid.Rank; row+=1) {
+                char[] gridRow = grid[row];
+                if (!hasGalaxy(gridRow)) {
+                    newGrid = expandGridAtRow(newGrid, row+extraRows);
+                    extraRows+=1;
+                }
+            }
+            foreach(char[] gridRow in newGrid) {
+                Console.WriteLine($"{gridRow}");
             }
         }
 
@@ -42,6 +51,36 @@ namespace Day11
             {
                 gridRow[i] = line.ToCharArray()[i];
             }
+        }
+
+        static public bool hasGalaxy(char[] row) {
+            foreach (char c in row) {
+                if (c=='#') {
+                    Console.WriteLine($"hasGalaxy row:{String.Join("", row.ToList())} TRUE");
+                    return true;
+                }
+            }
+            Console.WriteLine($"hasGalaxy row:{row} FALSE");
+            return false;
+        }
+
+        static public char[][] expandGridAtRow(char[][] grid, int row) {
+            Console.WriteLine($"expandGridAtRow grid.Rank:{grid.Rank} row:{row}");
+            char[][] newGrid = new char[grid.Rank+1][];
+            int currentRow=0;
+            for(int i=0; i<grid.Rank; i+=1)
+            {
+                newGrid[currentRow] = grid[i];
+                if (i==row) {
+                    currentRow += 1;
+                    newGrid[currentRow] = new char[grid[row].Length];
+                    for(int j=0; j<newGrid[currentRow].Length; j+=1)
+                    {
+                        newGrid[currentRow][j] = '.';
+                    }
+                }
+            }
+            return newGrid;
         }
 
     } // program
