@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 
@@ -19,82 +20,60 @@ namespace Day11
             if (rawLine is null) { throw new Exception("WHY IS THE FILE EMPTY"); }
             char[,] grid = new char[rawLine.Length, rawLine.Length];
             // row 0
-            transcribe(rawLine, grid, 0);
+            GalaxyUtilities.transcribeStringToGridRow(rawLine, grid, 0);
             int row = 1;
             while ((rawLine = reader.ReadLine()) != null)
             {
-                transcribe(rawLine, grid, row);
+                GalaxyUtilities.transcribeStringToGridRow(rawLine, grid, row);
                 row += 1;
             }
-            displayGrid(grid);
-            // expand rows
-            int startRow = 0;
-            while (true)
+            // GalaxyUtilities.displayGrid(grid);
+            grid = GalaxyUtilities.expandRowsWithoutGalaxies(grid);
+            // GalaxyUtilities.displayGrid(grid);
+            grid = GalaxyUtilities.expandColsWithoutGalaxies(grid);
+            // GalaxyUtilities.displayGrid(grid);
+            List<Galaxy> galaxies = new List<Galaxy>();
+            int gridRows = grid.GetLength(0);
+            int gridCols = grid.GetLength(1);
+            for (int r = 0; r < gridRows; r += 1)
             {
-                for (row = startRow; row < grid.GetLength(0); row += 1)
+                for (int c = 0; c < gridCols; c += 1)
                 {
-                    if (hasGalaxyInRow(grid, row)) { continue; }
-                    grid = GalaxyUtilities.expandGridAtRow(grid, row);
-                    startRow = row + 2;
-                    break;
-
-                }
-                if (row == grid.GetLength(0) - 1) { break; }
-
-            }
-            displayGrid(grid);
-        }
-
-        static public string stringRow(char[,] grid, int row)
-        {
-            string returnValue = "";
-            for (int col = 0; col < grid.GetLength(1); col += 1)
-            {
-                returnValue = $"{returnValue}{grid[row, col]}";
-            }
-            return returnValue;
-        }
-
-        static public void displayGrid(char[,] grid)
-        {
-            // Console.WriteLine($"displayGrid grid.Length:{grid.Length} grid.GetLength(1):{grid.GetLength(1)}");
-            for (int row = 0; row < grid.GetLength(0); row += 1)
-            {
-                for (int col = 0; col < grid.GetLength(1); col += 1)
-                {
-                    Console.Write($"{grid[row, col]}");
-                }
-                Console.WriteLine("");
-
-            }
-        }
-
-        static public void transcribe(string? line, char[,] grid, int row)
-        {
-            if (line is null) { throw new Exception("WHY IS THE STRING EMPTY"); }
-            for (int i = 0; i < line.Length; i += 1)
-            {
-                grid[row, i] = line.ToCharArray()[i];
-            }
-        }
-
-        static public bool hasGalaxyInRow(char[,] grid, int row)
-        {
-            for (int col = 0; col < grid.GetLength(1); col += 1)
-            {
-                if (grid[row, col] == '#')
-                {
-                    Console.WriteLine($"hasGalaxy row:{row} {stringRow(grid, row)} TRUE");
-                    return true;
+                    if (grid[r, c] == '#')
+                    {
+                        Galaxy g = new Galaxy { row = r, col = c };
+                        Console.WriteLine($"g:{g}");
+                        galaxies.Add(g);
+                    }
                 }
             }
-            Console.WriteLine($"hasGalaxy row:{row} {stringRow(grid, row)} FALSE");
-            return false;
-        }
+            int sumOfDistances = 0;
+            foreach (Galaxy galaxy in galaxies)
+            {
+                foreach (Galaxy neighbor in galaxies)
+                {
+                    if (galaxy == neighbor) { continue; }
+                    if (galaxy.neighbors.Contains(neighbor)) { continue; }
+                    galaxy.neighbors.Add(neighbor);
+                    neighbor.neighbors.Add(galaxy);
+                    int distanceRows = Math.Abs(galaxy.row - neighbor.row);
+                    int distanceCols = Math.Abs(galaxy.col - neighbor.col);
+                    int distance = distanceRows + distanceCols;
+                    sumOfDistances += distance;
+                }
+            }
+            Console.WriteLine($"sumOfDistances:{sumOfDistances}");
 
+        }
 
     } // program
 
+    public record class Galaxy
+    {
+        public required int row { get; set; }
+        public required int col { get; set; }
+        public List<Galaxy> neighbors = new List<Galaxy>();
+    }
 
     public class GalaxyUtilities
     {
@@ -104,13 +83,30 @@ namespace Day11
             while (true)
             {
                 int gridRows = grid.GetLength(0);
-                int gridCols = grid.GetLength(1);
-                int row = 0;
-                for (row = startRow; row < gridRows; row += 1)
+                for (int row = startRow; row < gridRows; row += 1)
                 {
                     if (hasGalaxyInRow(grid, row)) { continue; }
                     grid = expandGridAtRow(grid, row);
                     startRow = row + 2;
+                    goto OuterLoop;
+                }
+                break;
+            OuterLoop:;
+            }
+            return grid;
+        }
+
+        static public char[,] expandColsWithoutGalaxies(char[,] grid)
+        {
+            int startCol = 0;
+            while (true)
+            {
+                int gridCols = grid.GetLength(1);
+                for (int col = startCol; col < gridCols; col += 1)
+                {
+                    if (hasGalaxyInCol(grid, col)) { continue; }
+                    grid = expandGridAtCol(grid, col);
+                    startCol = col + 2;
                     goto OuterLoop;
                 }
                 break;
@@ -147,7 +143,33 @@ namespace Day11
             return newGrid;
         }
 
-        static private void displayGrid(char[,] grid)
+        static public char[,] expandGridAtCol(char[,] grid, int col)
+        {
+            int gridRows = grid.GetLength(0);
+            int gridCols = grid.GetLength(1);
+            char[,] newGrid = new char[gridRows, gridCols + 1];
+            for (int c = 0; c <= col; c += 1)
+            {
+                for (int r = 0; r < gridRows; r += 1)
+                {
+                    newGrid[r, c] = grid[r, c];
+                }
+            }
+            for (int r = 0; r < gridRows; r += 1)
+            {
+                newGrid[r, col + 1] = '.';
+            }
+            for (int c = col + 2; c < gridCols + 1; c += 1)
+            {
+                for (int r = 0; r < gridRows; r += 1)
+                {
+                    newGrid[r, c] = grid[r, c - 1];
+                }
+            }
+            return newGrid;
+        }
+
+        static public void displayGrid(char[,] grid)
         {
             for (int row = 0; row < grid.GetLength(0); row += 1)
             {
@@ -162,23 +184,31 @@ namespace Day11
 
         static public bool hasGalaxyInRow(char[,] grid, int row)
         {
-            for (int col = 0; col < grid.GetLength(1); col += 1)
+            int gridCols = grid.GetLength(1);
+            for (int col = 0; col < gridCols; col += 1)
             {
-                if (grid[row, col] == '#')
-                {
-                    return true;
-                }
+                if (grid[row, col] == '#') { return true; }
             }
             return false;
         }
-        static private string stringRow(char[,] grid, int row)
+
+        static public bool hasGalaxyInCol(char[,] grid, int col)
         {
-            string returnValue = "";
-            for (int col = 0; col < grid.GetLength(1); col += 1)
+            int gridRows = grid.GetLength(0);
+            for (int row = 0; row < gridRows; row += 1)
             {
-                returnValue = $"{returnValue}{grid[row, col]}";
+                if (grid[row, col] == '#') { return true; }
             }
-            return returnValue;
+            return false;
+        }
+
+        static public void transcribeStringToGridRow(string? line, char[,] grid, int row)
+        {
+            if (line is null) { throw new Exception("WHY IS THE STRING EMPTY"); }
+            for (int i = 0; i < line.Length; i += 1)
+            {
+                grid[row, i] = line.ToCharArray()[i];
+            }
         }
 
     }

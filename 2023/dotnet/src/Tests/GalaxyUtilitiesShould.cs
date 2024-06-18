@@ -165,5 +165,70 @@ namespace GalaxyUtilitiesShould
             Assert.Equal(newGridShould, newGrid);
         }
 
+        [Fact]
+        public void GalaxyUtilitiesShould_hasGalaxyInCol_hasGalaxy_true()
+        {
+            // Given
+            char[,] grid = new char[3, 5]
+            {   {'.','.','.','#','.',},
+                {'.','.','.','.','.',},
+                {'.','#','.','.','.',},
+            };
+            // When
+            var result = GalaxyUtilities.hasGalaxyInCol(grid, 1);
+            // Then
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void GalaxyUtilitiesShould_hasGalaxyInCol_noGalaxy_false()
+        {
+            // Given
+            char[,] grid = new char[3, 5]
+            {   {'.','.','.','#','.',},
+                {'.','.','.','.','.',},
+                {'.','#','.','.','.',},
+            };
+            // When
+            var result = GalaxyUtilities.hasGalaxyInCol(grid, 2);
+            // Then
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void GalaxyUtilitiesShould_expandGridAtCol_3x5_3x6()
+        {
+            // Given
+            char[,] grid = new char[3, 5]
+            {   {'.','.','.','#','.',},
+                {'.','.','.','.','.',},
+                {'.','#','.','.','.',},
+            };
+            // When
+            var newGrid = GalaxyUtilities.expandGridAtCol(grid, 2);
+            // Then
+            Assert.Equal(3, newGrid.GetLength(0));
+            Assert.Equal(6, newGrid.GetLength(1));
+        }
+
+        [Fact]
+        public void GalaxyUtilitiesShould_expandGridAtCol_5cols_6cols_Correct()
+        {
+            // Given
+            char[,] grid = new char[3, 5]
+            {   {'.','.','.','#','.',},
+                {'.','.','.','.','.',},
+                {'.','#','.','.','.',},
+            };
+            char[,] gridShould = new char[3, 6]
+            {   {'.','.','.','.','#','.',},
+                {'.','.','.','.','.','.',},
+                {'.','.','#','.','.','.',},
+            };
+            // When
+            var newGrid = GalaxyUtilities.expandGridAtCol(grid, 0);
+            // Then
+            Assert.Equal(gridShould, newGrid);
+        }
     }
 }
