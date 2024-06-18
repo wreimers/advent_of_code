@@ -15,7 +15,7 @@ namespace Day11
         static void Main_Day11(string[] args)
         {
             Console.WriteLine("Advent of Code 2023 Day 11");
-            using StreamReader reader = new("var/day_11/sample.txt");
+            using StreamReader reader = new("var/day_11/input.txt");
             string? rawLine = reader.ReadLine();
             if (rawLine is null) { throw new Exception("WHY IS THE FILE EMPTY"); }
             char[,] grid = new char[rawLine.Length, rawLine.Length];
