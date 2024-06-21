@@ -79,58 +79,6 @@ namespace Day12
                     return results;
                 }
             }
-
-            // shamelessly adapted from:
-            // https://www.w3resource.com/csharp-exercises/recursion/csharp-recursion-exercise-11.php#google_vignette
-            /* nope. found https://www.nuget.org/packages/Combinatorics
-            private void swapNumbers(ref int a, ref int b)
-            {
-                int temp = a;
-                a = b;
-                b = temp;
-            }
-
-            private void doPermute(int[] list, int k, int m)
-            {
-
-            }
-            */
-
-            // shamelessly stolen from:
-            // https://stackoverflow.com/questions/1952153/what-is-the-best-way-to-find-all-combinations-of-items-in-an-array/10629938#10629938
-            /* nope. there is a bug that prevents lists with two or more of the same element from being permuted.
-            public List<List<int>> permutations
-            {
-                get
-                {
-                    var results = new List<List<int>>();
-                    var rawPermutations = GetPermutations<int>(countsList, countsList.Count);
-                    foreach (IEnumerable<int> permutation in rawPermutations)
-                    {
-                        results.Add(permutation.ToList());
-                        // Console.WriteLine($"permutation:{permutations.ToList()}");
-                    }
-                    Console.WriteLine($"permutations result: {results}");
-                    return results;
-                }
-            }
-            private static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
-            {
-                if (length == 1) return list.Select(t => new T[] { t });
-                return GetPermutations(list, length - 1)
-                    .SelectMany(t => list.Where(e => !t.Contains(e)),
-                        (t1, t2) => t1.Concat(new T[] { t2 }));
-            }
-            */
-        }
-
-        static public void transcribeStringToGridRow(string? line, char[,] grid, long row)
-        {
-            if (line is null) { throw new Exception("WHY IS THE STRING EMPTY"); }
-            for (long i = 0; i < line.Length; i += 1)
-            {
-                grid[row, i] = line.ToCharArray()[i];
-            }
         }
 
     }
