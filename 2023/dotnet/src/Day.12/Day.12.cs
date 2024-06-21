@@ -7,7 +7,7 @@ namespace Day12
 {
     internal class Program
     {
-        private static string DATA_FILE = "var/day_11/sample.txt";
+        private static string DATA_FILE = "var/day_12/sample.txt";
 
         static void Main(string[] args)
         {
@@ -17,28 +17,45 @@ namespace Day12
 
         static void Main_Day12(string[] args)
         {
+            List<ConditionRecord> records = new List<ConditionRecord>();
             using StreamReader reader = new(DATA_FILE);
-            string? rawLine = reader.ReadLine();
-            if (rawLine is null) { throw new Exception("WHY IS THE FILE EMPTY"); }
-            char[,] grid = new char[rawLine.Length, rawLine.Length];
-            // row 0
-            transcribeStringToGridRow(rawLine, grid, 0);
-            long row = 1;
+            string? rawLine;
             while ((rawLine = reader.ReadLine()) != null)
             {
-                transcribeStringToGridRow(rawLine, grid, row);
-                row += 1;
+                Console.WriteLine(rawLine);
+                char[] splitters = [' ',];
+                string[] tokens = rawLine.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                var record = new ConditionRecord { conditions = tokens[0], counts = tokens[1] };
+                records.Add(record);
             }
+
         }
 
-        static public void transcribeStringToGridRow(string? line, char[,] grid, long row)
+        public class ConditionRecord
         {
-            if (line is null) { throw new Exception("WHY IS THE STRING EMPTY"); }
-            for (long i = 0; i < line.Length; i += 1)
-            {
-                grid[row, i] = line.ToCharArray()[i];
-            }
-        }
+            public required string conditions { get; set; }
+            public required string counts { get; set; }
 
+            private List<int> countsList
+            {
+                var countsResult = new List<int>();
+                char[] splitters = [' ', ','];
+            string[] tokens = counts.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string token in tokens) {
+                    // convert string to int and add them to countsResult
+                }
+                return countsResult;
+            };
     }
+
+    static public void transcribeStringToGridRow(string? line, char[,] grid, long row)
+    {
+        if (line is null) { throw new Exception("WHY IS THE STRING EMPTY"); }
+        for (long i = 0; i < line.Length; i += 1)
+        {
+            grid[row, i] = line.ToCharArray()[i];
+        }
+    }
+
+}
 }
