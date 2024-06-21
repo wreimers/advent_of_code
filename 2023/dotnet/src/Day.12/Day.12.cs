@@ -2,6 +2,7 @@
 using System.Data;
 using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
+using Combinatorics.Collections;
 
 namespace Day12
 {
@@ -68,12 +69,20 @@ namespace Day12
                 get
                 {
                     var results = new List<List<int>>();
+                    var permutations = new Permutations<int>(countsList, GenerateOption.WithoutRepetition);
+                    // Console.WriteLine($"permutations:{permutations}");
+                    foreach (var p in permutations)
+                    {
+                        // Console.WriteLine($"p:{p}");
+                        results.Add(p.ToList());
+                    }
                     return results;
                 }
             }
 
             // shamelessly adapted from:
             // https://www.w3resource.com/csharp-exercises/recursion/csharp-recursion-exercise-11.php#google_vignette
+            /* nope. found https://www.nuget.org/packages/Combinatorics
             private void swapNumbers(ref int a, ref int b)
             {
                 int temp = a;
@@ -85,6 +94,7 @@ namespace Day12
             {
 
             }
+            */
 
             // shamelessly stolen from:
             // https://stackoverflow.com/questions/1952153/what-is-the-best-way-to-find-all-combinations-of-items-in-an-array/10629938#10629938
