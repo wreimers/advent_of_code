@@ -68,6 +68,32 @@ namespace Day12
                 get
                 {
                     var results = new List<List<int>>();
+                    return results;
+                }
+            }
+
+            // shamelessly adapted from:
+            // https://www.w3resource.com/csharp-exercises/recursion/csharp-recursion-exercise-11.php#google_vignette
+            private void swapNumbers(ref int a, ref int b)
+            {
+                int temp = a;
+                a = b;
+                b = temp;
+            }
+
+            private void doPermute(int[] list, int k, int m)
+            {
+
+            }
+
+            // shamelessly stolen from:
+            // https://stackoverflow.com/questions/1952153/what-is-the-best-way-to-find-all-combinations-of-items-in-an-array/10629938#10629938
+            /* nope. there is a bug that prevents lists with two or more of the same element from being permuted.
+            public List<List<int>> permutations
+            {
+                get
+                {
+                    var results = new List<List<int>>();
                     var rawPermutations = GetPermutations<int>(countsList, countsList.Count);
                     foreach (IEnumerable<int> permutation in rawPermutations)
                     {
@@ -78,17 +104,6 @@ namespace Day12
                     return results;
                 }
             }
-
-            private void swapNumbers(ref int a, ref int b)
-            {
-                int temp = a;
-                a = b;
-                b = temp;
-            }
-
-            // shamelessly stolen from:
-            // https://stackoverflow.com/questions/1952153/what-is-the-best-way-to-find-all-combinations-of-items-in-an-array/10629938#10629938
-            /* nope. there is a bug that prevents lists with two or more of the same element from being permuted.
             private static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
             {
                 if (length == 1) return list.Select(t => new T[] { t });
