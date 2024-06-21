@@ -79,8 +79,16 @@ namespace Day12
                 }
             }
 
+            private void swapNumbers(ref int a, ref int b)
+            {
+                int temp = a;
+                a = b;
+                b = temp;
+            }
+
             // shamelessly stolen from:
             // https://stackoverflow.com/questions/1952153/what-is-the-best-way-to-find-all-combinations-of-items-in-an-array/10629938#10629938
+            /* nope. there is a bug that prevents lists with two or more of the same element from being permuted.
             private static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
             {
                 if (length == 1) return list.Select(t => new T[] { t });
@@ -88,6 +96,7 @@ namespace Day12
                     .SelectMany(t => list.Where(e => !t.Contains(e)),
                         (t1, t2) => t1.Concat(new T[] { t2 }));
             }
+            */
         }
 
         static public void transcribeStringToGridRow(string? line, char[,] grid, long row)
