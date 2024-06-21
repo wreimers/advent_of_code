@@ -28,6 +28,16 @@ namespace Day12
                 var record = new ConditionRecord { conditions = tokens[0], counts = tokens[1] };
                 records.Add(record);
             }
+            foreach (ConditionRecord record in records)
+            {
+                Console.WriteLine($"conditions:{record.conditions} countsList:[{string.Join(",", record.countsList)}]");
+                Console.WriteLine($"permutations:");
+                foreach (List<int> permutation in record.permutations)
+                {
+                    Console.Write($"[{string.Join(",", permutation)}]");
+                }
+                Console.WriteLine();
+            }
 
         }
 
@@ -36,26 +46,58 @@ namespace Day12
             public required string conditions { get; set; }
             public required string counts { get; set; }
 
-            private List<int> countsList
+            public List<int> countsList
             {
-                var countsResult = new List<int>();
-                char[] splitters = [' ', ','];
-            string[] tokens = counts.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string token in tokens) {
-                    // convert string to int and add them to countsResult
+                get
+                {
+                    var countsResult = new List<int>();
+                    char[] splitters = [' ', ','];
+                    string[] tokens = counts.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string token in tokens)
+                    {
+                        // convert string to int and add them to countsResult
+                        int result = Int32.Parse(token);
+                        countsResult.Add(result);
+                    }
+                    return countsResult;
                 }
-                return countsResult;
-            };
-    }
+            }
 
-    static public void transcribeStringToGridRow(string? line, char[,] grid, long row)
-    {
-        if (line is null) { throw new Exception("WHY IS THE STRING EMPTY"); }
-        for (long i = 0; i < line.Length; i += 1)
-        {
-            grid[row, i] = line.ToCharArray()[i];
+            public List<List<int>> permutations
+            {
+                get
+                {
+                    var results = new List<List<int>>();
+                    var rawPermutations = GetPermutations<int>(countsList, countsList.Count);
+                    foreach (IEnumerable<int> permutation in rawPermutations)
+                    {
+                        results.Add(permutation.ToList());
+                        // Console.WriteLine($"permutation:{permutations.ToList()}");
+                    }
+                    Console.WriteLine($"permutations result: {results}");
+                    return results;
+                }
+            }
+
+            // shamelessly stolen from:
+            // https://stackoverflow.com/questions/1952153/what-is-the-best-way-to-find-all-combinations-of-items-in-an-array/10629938#10629938
+            private static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> list, int length)
+            {
+                if (length == 1) return list.Select(t => new T[] { t });
+                return GetPermutations(list, length - 1)
+                    .SelectMany(t => list.Where(e => !t.Contains(e)),
+                        (t1, t2) => t1.Concat(new T[] { t2 }));
+            }
         }
-    }
 
-}
+        static public void transcribeStringToGridRow(string? line, char[,] grid, long row)
+        {
+            if (line is null) { throw new Exception("WHY IS THE STRING EMPTY"); }
+            for (long i = 0; i < line.Length; i += 1)
+            {
+                grid[row, i] = line.ToCharArray()[i];
+            }
+        }
+
+    }
 }
