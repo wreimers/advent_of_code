@@ -5,7 +5,7 @@ namespace Day13
 {
     internal class Program
     {
-        private static string DATA_FILE = "var/day_13/sample.txt";
+        private static string DATA_FILE = "var/day_13/input.txt";
 
         static void Main(string[] args)
         {
@@ -56,7 +56,10 @@ namespace Day13
                         }
                         if (symmetrical is true)
                         {
-                            Console.WriteLine($"symmetry found, row:{row} row+1:{row + 1}");
+                            Console.WriteLine($"symmetry found rows:{row}:{row + 1}");
+                            p.symmetryType = Symmetry.Horizontal;
+                            p.symmetryIndex1 = row;
+                            p.symmetryIndex2 = row + 1;
                             break;
                         }
                     }
@@ -64,6 +67,13 @@ namespace Day13
             }
         }
     }
+}
+
+public enum Symmetry
+{
+    None,
+    Horizontal,
+    Vertical,
 }
 
 public class Puzzle
@@ -104,4 +114,9 @@ public class Puzzle
 
         }
     }
+
+    public Symmetry symmetryType = Symmetry.None;
+
+    public int symmetryIndex1 = -1;
+    public int symmetryIndex2 = -1;
 }
