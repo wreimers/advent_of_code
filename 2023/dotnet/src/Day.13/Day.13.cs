@@ -5,7 +5,7 @@ namespace Day13
 {
     internal class Program
     {
-        private static string DATA_FILE = "var/day_13/input.txt";
+        private static string DATA_FILE = "var/day_13/sample.txt";
 
         static void Main(string[] args)
         {
@@ -37,73 +37,45 @@ namespace Day13
                 Console.WriteLine();
                 p.display();
                 // -- check for row symmetry
-                bool symmetrical = false;
-                for (int row = 0; row < p.lines.Count - 1; row += 1)
-                {
-                    if (p.lines[row] == p.lines[row + 1])
-                    {
-                        Console.WriteLine($"possible symmetry rows:{row}:{row + 1}");
-                        int offset = 0;
-                        symmetrical = true;
-                        while (row - offset >= 0 && row + 1 + offset < p.lines.Count)
-                        {
-                            int frontIndex = row - offset;
-                            int backIndex = row + 1 + offset;
-                            Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
-                            if (p.lines[frontIndex] != p.lines[row + 1 + offset])
-                            {
-                                symmetrical = false;
-                                break;
-                            }
-                            offset += 1;
-                        }
-                        if (symmetrical is true)
-                        {
-                            Console.WriteLine($"symmetry found rows:{row}:{row + 1}");
-                            p.symmetryType = Symmetry.Horizontal;
-                            p.symmetryIndex1 = row;
-                            p.symmetryIndex2 = row + 1;
-                            break;
-                        }
-                    }
-                }
+                bool symmetrical = p.checkForHorizontalSymmetry();
                 // -- check for column symmetry
                 if (symmetrical is false)
                 {
-                    int columns = p.lines[0].Length;
-                    for (int col = 0; col < columns - 1; col += 1)
-                    {
-                        string leftColumn = p.columnString(col);
-                        string rightColumn = p.columnString(col + 1);
-                        Console.WriteLine($"leftColumn:{leftColumn} rightColumn:{rightColumn}");
-                        if (leftColumn == rightColumn)
-                        {
-                            Console.WriteLine($"possible symmetry cols:{col}:{col + 1}");
-                            int offset = 0;
-                            symmetrical = true;
-                            while (col - offset >= 0 && col + 1 + offset < columns)
-                            {
-                                int frontIndex = col - offset;
-                                int backIndex = col + 1 + offset;
-                                Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
-                                Console.WriteLine($"- leftColumn:{p.columnString(frontIndex)} rightColumn:{p.columnString(backIndex)}");
-                                if (p.columnString(frontIndex) != p.columnString(backIndex))
-                                {
-                                    symmetrical = false;
-                                    break;
-                                }
-                                offset += 1;
-                            }
-                            if (symmetrical is true)
-                            {
-                                Console.WriteLine($"symmetry found cols:{col}:{col + 1}");
-                                p.symmetryType = Symmetry.Vertical;
-                                p.symmetryIndex1 = col;
-                                p.symmetryIndex2 = col + 1;
-                                break;
-                            }
-                        }
-                    }
+                    symmetrical = p.checkForVerticalSymmetry();
+                    // int columns = p.lines[0].Length;
+                    // for (int col = 0; col < columns - 1; col += 1)
+                    // {
+                    //     string leftColumn = p.columnString(col);
+                    //     string rightColumn = p.columnString(col + 1);
+                    //     Console.WriteLine($"leftColumn:{leftColumn} rightColumn:{rightColumn}");
+                    //     if (leftColumn == rightColumn)
+                    //     {
+                    //         Console.WriteLine($"possible symmetry cols:{col}:{col + 1}");
+                    //         int offset = 0;
+                    //         symmetrical = true;
+                    //         while (col - offset >= 0 && col + 1 + offset < columns)
+                    //         {
+                    //             int frontIndex = col - offset;
+                    //             int backIndex = col + 1 + offset;
+                    //             Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
+                    //             Console.WriteLine($"- leftColumn:{p.columnString(frontIndex)} rightColumn:{p.columnString(backIndex)}");
+                    //             if (p.columnString(frontIndex) != p.columnString(backIndex))
+                    //             {
+                    //                 symmetrical = false;
+                    //                 break;
+                    //             }
+                    //             offset += 1;
+                    //         }
+                    //         if (symmetrical is true)
+                    //         {
+                    //             Console.WriteLine($"symmetry found cols:{col}:{col + 1}");
+                    //             p.symmetryType = Symmetry.Vertical;
+                    //             p.symmetryIndex1 = col;
+                    //             p.symmetryIndex2 = col + 1;
+                    //             break;
+                    //         }
+                    //     }
+                    // }
                 }
                 int sum = 0;
                 switch (p.symmetryType)
@@ -183,5 +155,80 @@ public class Puzzle
             result = $"{result}{grid[i, column]}";
         }
         return result;
+    }
+
+    public bool checkForHorizontalSymmetry()
+    {
+        bool symmetrical = false;
+        for (int row = 0; row < lines.Count - 1; row += 1)
+        {
+            if (lines[row] == lines[row + 1])
+            {
+                Console.WriteLine($"possible symmetry rows:{row}:{row + 1}");
+                int offset = 0;
+                symmetrical = true;
+                while (row - offset >= 0 && row + 1 + offset < lines.Count)
+                {
+                    int frontIndex = row - offset;
+                    int backIndex = row + 1 + offset;
+                    Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
+                    if (lines[frontIndex] != lines[row + 1 + offset])
+                    {
+                        symmetrical = false;
+                        break;
+                    }
+                    offset += 1;
+                }
+                if (symmetrical is true)
+                {
+                    Console.WriteLine($"symmetry found rows:{row}:{row + 1}");
+                    symmetryType = Symmetry.Horizontal;
+                    symmetryIndex1 = row;
+                    symmetryIndex2 = row + 1;
+                    break;
+                }
+            }
+        }
+        return symmetrical;
+    }
+
+    public bool checkForVerticalSymmetry()
+    {
+        bool symmetrical = false;
+        int columns = lines[0].Length;
+        for (int col = 0; col < columns - 1; col += 1)
+        {
+            string leftColumn = columnString(col);
+            string rightColumn = columnString(col + 1);
+            Console.WriteLine($"leftColumn:{leftColumn} rightColumn:{rightColumn}");
+            if (leftColumn == rightColumn)
+            {
+                Console.WriteLine($"possible symmetry cols:{col}:{col + 1}");
+                int offset = 0;
+                symmetrical = true;
+                while (col - offset >= 0 && col + 1 + offset < columns)
+                {
+                    int frontIndex = col - offset;
+                    int backIndex = col + 1 + offset;
+                    Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
+                    Console.WriteLine($"- leftColumn:{columnString(frontIndex)} rightColumn:{columnString(backIndex)}");
+                    if (columnString(frontIndex) != columnString(backIndex))
+                    {
+                        symmetrical = false;
+                        break;
+                    }
+                    offset += 1;
+                }
+                if (symmetrical is true)
+                {
+                    Console.WriteLine($"symmetry found cols:{col}:{col + 1}");
+                    symmetryType = Symmetry.Vertical;
+                    symmetryIndex1 = col;
+                    symmetryIndex2 = col + 1;
+                    break;
+                }
+            }
+        }
+        return symmetrical;
     }
 }
