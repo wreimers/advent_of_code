@@ -104,6 +104,21 @@ namespace Day13
                         }
                     }
                 }
+                int sum = 0;
+                switch (p.symmetryType)
+                {
+                    case Symmetry.None:
+                        continue;
+                    case Symmetry.Horizontal:
+                        // sum += 100 * the number of rows above the line of symmetry
+                        // that's [0..symmetryIndex1]
+                        break;
+                    case Symmetry.Vertical:
+                        // sum += the number of cols left of the line of symmetry
+                        // that's [0..symmetryIndex1]
+                        break;
+                }
+                Console.WriteLine($"sum:{sum}");
             }
         }
     }
@@ -142,9 +157,9 @@ public class Puzzle
     }
     public void display()
     {
-        for (long row = 0; row < grid.GetLength(0); row += 1)
+        for (int row = 0; row < grid.GetLength(0); row += 1)
         {
-            for (long col = 0; col < grid.GetLength(1); col += 1)
+            for (int col = 0; col < grid.GetLength(1); col += 1)
             {
                 Console.Write($"{grid[row, col]}");
             }
