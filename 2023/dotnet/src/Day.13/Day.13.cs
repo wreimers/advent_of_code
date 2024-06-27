@@ -31,6 +31,7 @@ namespace Day13
                 currentPuzzle.lines.Add(rawLine);
             }
             Console.WriteLine($"puzzles:{puzzles} count:{puzzles.Count}");
+            int grandTotal = 0;
             foreach (Puzzle p in puzzles)
             {
                 Console.WriteLine();
@@ -112,14 +113,18 @@ namespace Day13
                     case Symmetry.Horizontal:
                         // sum += 100 * the number of rows above the line of symmetry
                         // that's [0..symmetryIndex1]
+                        sum += (p.symmetryIndex1 + 1) * 100;
                         break;
                     case Symmetry.Vertical:
                         // sum += the number of cols left of the line of symmetry
                         // that's [0..symmetryIndex1]
+                        sum += p.symmetryIndex1 + 1;
                         break;
                 }
                 Console.WriteLine($"sum:{sum}");
+                grandTotal += sum;
             }
+            Console.WriteLine($"\ngrandTotal:{grandTotal}");
         }
     }
 }
