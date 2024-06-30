@@ -36,61 +36,51 @@ namespace Day13
             {
                 Console.WriteLine();
                 p.display();
+
+                Console.WriteLine($"Checking puzzle");
                 // -- check for row symmetry
                 bool symmetrical = p.checkForHorizontalSymmetry();
                 // -- check for column symmetry
                 if (symmetrical is false)
                 {
                     symmetrical = p.checkForVerticalSymmetry();
-                    // int columns = p.lines[0].Length;
-                    // for (int col = 0; col < columns - 1; col += 1)
-                    // {
-                    //     string leftColumn = p.columnString(col);
-                    //     string rightColumn = p.columnString(col + 1);
-                    //     Console.WriteLine($"leftColumn:{leftColumn} rightColumn:{rightColumn}");
-                    //     if (leftColumn == rightColumn)
-                    //     {
-                    //         Console.WriteLine($"possible symmetry cols:{col}:{col + 1}");
-                    //         int offset = 0;
-                    //         symmetrical = true;
-                    //         while (col - offset >= 0 && col + 1 + offset < columns)
-                    //         {
-                    //             int frontIndex = col - offset;
-                    //             int backIndex = col + 1 + offset;
-                    //             Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
-                    //             Console.WriteLine($"- leftColumn:{p.columnString(frontIndex)} rightColumn:{p.columnString(backIndex)}");
-                    //             if (p.columnString(frontIndex) != p.columnString(backIndex))
-                    //             {
-                    //                 symmetrical = false;
-                    //                 break;
-                    //             }
-                    //             offset += 1;
-                    //         }
-                    //         if (symmetrical is true)
-                    //         {
-                    //             Console.WriteLine($"symmetry found cols:{col}:{col + 1}");
-                    //             p.symmetryType = Symmetry.Vertical;
-                    //             p.symmetryIndex1 = col;
-                    //             p.symmetryIndex2 = col + 1;
-                    //             break;
-                    //         }
-                    //     }
-                    // }
                 }
+                if (symmetrical is false)
+                {
+                    throw new Exception("UNSYMMETRIC PUZZLE");
+                }
+
+                Console.WriteLine($"Checking puzzle 2");
+                // find the smudge
+                Puzzle p2 = new Puzzle();
+                for (int row = 0; row < p.lines.Count; row += 1)
+                {
+                    for (int col = 0; col < p.lines[0].Length; col += 1)
+                    {
+                        p2 = p.swapChar(row, col);
+                        bool p2symmetrical = p2.checkForHorizontalSymmetry(p.symmetryType, p.symmetryIndex1, p.symmetryIndex2);
+                        if (p2symmetrical is false)
+                        {
+                            p2symmetrical = p2.checkForVerticalSymmetry(p.symmetryType, p.symmetryIndex1, p.symmetryIndex2);
+                        }
+                        if (p2symmetrical is true)
+                        {
+                            goto SmudgeFound;
+                        }
+                    }
+                }
+            SmudgeFound:;
+
                 int sum = 0;
-                switch (p.symmetryType)
+                switch (p2.symmetryType)
                 {
                     case Symmetry.None:
                         continue;
                     case Symmetry.Horizontal:
-                        // sum += 100 * the number of rows above the line of symmetry
-                        // that's [0..symmetryIndex1]
-                        sum += (p.symmetryIndex1 + 1) * 100;
+                        sum += (p2.symmetryIndex1 + 1) * 100;
                         break;
                     case Symmetry.Vertical:
-                        // sum += the number of cols left of the line of symmetry
-                        // that's [0..symmetryIndex1]
-                        sum += p.symmetryIndex1 + 1;
+                        sum += p2.symmetryIndex1 + 1;
                         break;
                 }
                 Console.WriteLine($"sum:{sum}");
@@ -157,21 +147,26 @@ public class Puzzle
         return result;
     }
 
-    public bool checkForHorizontalSymmetry()
+    public bool checkForHorizontalSymmetry(Symmetry? ignoreSymmetryType = null, int? ignoreIndex1 = null, int? ignoreIndex2 = null)
     {
+        // Console.WriteLine($"checkForHorizontalSymmetry ignoreSymmetryType:{ignoreSymmetryType} ignoreIndex1:{ignoreIndex1} ignoreIndex2:{ignoreIndex2}");
         bool symmetrical = false;
         for (int row = 0; row < lines.Count - 1; row += 1)
         {
             if (lines[row] == lines[row + 1])
             {
-                Console.WriteLine($"possible symmetry rows:{row}:{row + 1}");
+                if (ignoreSymmetryType == Symmetry.Horizontal && row == ignoreIndex1 && row + 1 == ignoreIndex2)
+                {
+                    continue;
+                }
+                // Console.WriteLine($"possible symmetry rows:{row}:{row + 1}");
                 int offset = 0;
                 symmetrical = true;
                 while (row - offset >= 0 && row + 1 + offset < lines.Count)
                 {
                     int frontIndex = row - offset;
                     int backIndex = row + 1 + offset;
-                    Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
+                    // Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
                     if (lines[frontIndex] != lines[row + 1 + offset])
                     {
                         symmetrical = false;
@@ -192,7 +187,7 @@ public class Puzzle
         return symmetrical;
     }
 
-    public bool checkForVerticalSymmetry()
+    public bool checkForVerticalSymmetry(Symmetry? ignoreSymmetryType = null, int? ignoreIndex1 = null, int? ignoreIndex2 = null)
     {
         bool symmetrical = false;
         int columns = lines[0].Length;
@@ -200,18 +195,22 @@ public class Puzzle
         {
             string leftColumn = columnString(col);
             string rightColumn = columnString(col + 1);
-            Console.WriteLine($"leftColumn:{leftColumn} rightColumn:{rightColumn}");
+            // Console.WriteLine($"leftColumn:{leftColumn} rightColumn:{rightColumn}");
             if (leftColumn == rightColumn)
             {
-                Console.WriteLine($"possible symmetry cols:{col}:{col + 1}");
+                // Console.WriteLine($"possible symmetry cols:{col}:{col + 1}");
+                if (ignoreSymmetryType == Symmetry.Vertical && col == ignoreIndex1 && col + 1 == ignoreIndex2)
+                {
+                    continue;
+                }
                 int offset = 0;
                 symmetrical = true;
                 while (col - offset >= 0 && col + 1 + offset < columns)
                 {
                     int frontIndex = col - offset;
                     int backIndex = col + 1 + offset;
-                    Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
-                    Console.WriteLine($"- leftColumn:{columnString(frontIndex)} rightColumn:{columnString(backIndex)}");
+                    // Console.WriteLine($"frontIndex:{frontIndex} backIndex:{backIndex}");
+                    // Console.WriteLine($"- leftColumn:{columnString(frontIndex)} rightColumn:{columnString(backIndex)}");
                     if (columnString(frontIndex) != columnString(backIndex))
                     {
                         symmetrical = false;
@@ -230,5 +229,30 @@ public class Puzzle
             }
         }
         return symmetrical;
+    }
+
+    public Puzzle swapChar(int row, int col)
+    {
+        // Console.WriteLine($"swapChar row:{row} col:{col}");
+        Puzzle p = new Puzzle();
+        foreach (string s in lines)
+        {
+            p.lines.Add(s);
+        }
+        string rowString = p.lines[row];
+        // Console.WriteLine($"rowString:{rowString}");
+        char currentChar = rowString[col];
+        // Console.WriteLine($"currentChar:{currentChar}");
+        char newChar = '.';
+        if (currentChar == '.')
+        {
+            newChar = '#';
+        }
+        string newString = rowString.Remove(col, 1);
+        // Console.WriteLine($"newString(remove):{newString}");
+        newString = newString.Insert(col, newChar.ToString());
+        // Console.WriteLine($"newString(insert):{newString}");
+        p.lines[row] = newString;
+        return p;
     }
 }
