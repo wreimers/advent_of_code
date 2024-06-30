@@ -22,9 +22,9 @@
             Console.WriteLine();
             p.display();
 
-            // long cycles = 1_000_000_000;
+            long cycles = 1_000_000_000;
             // long cycles = 10_000_000;
-            long cycles = 3;
+            // long cycles = 3;
             for (long k = 0; k < cycles; k += 1)
             {
                 foreach (Mirror m in p.mirrorsNorthToSouth)
