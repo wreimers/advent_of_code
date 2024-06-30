@@ -2,7 +2,7 @@
 {
     internal class Program
     {
-        private static string DATA_FILE = "var/day_14/sample.txt";
+        private static string DATA_FILE = "var/day_14/input.txt";
 
         static void Main(string[] args)
         {
