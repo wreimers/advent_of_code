@@ -8,7 +8,6 @@
         {
             Console.WriteLine("Advent of Code 2023 Day 16");
             var energizedCoordinates = new List<(int x, int y)>();
-            var usedSplitters = new List<(int x, int y)>();
             var puzzle = new EnergyPuzzle();
             string? rawLine;
             using StreamReader reader = new(DATA_FILE);
@@ -29,6 +28,7 @@
             beamQueue.Enqueue(b);
             while (beamQueue.Any())
             {
+                Console.WriteLine($"beamQueue.Count:{beamQueue.Count}");
                 var beam = beamQueue.Dequeue();
                 while (beam.hitEdge is false)
                 {
@@ -44,28 +44,36 @@
                         case '-':
                             if (beam.direction == Direction.Right || beam.direction == Direction.Left) { break; }
                             coords = (beam.row, beam.col);
-                            if (usedSplitters.Contains(coords)) { break; }
-                            b = new EnergyBeam
+                            if (!beam.usedSplitters.Contains(coords))
                             {
-                                row = beam.row,
-                                col = beam.col,
-                                direction = beam.direction == Direction.Up ? Direction.Down : Direction.Up,
-                            };
-                            beamQueue.Enqueue(b);
-                            usedSplitters.Add(coords);
+                                beam.direction = Direction.Left;
+                                beam.usedSplitters.Add(coords);
+                                b = new EnergyBeam
+                                {
+                                    row = beam.row,
+                                    col = beam.col,
+                                    direction = Direction.Right,
+                                };
+                                b.usedSplitters.Add(coords);
+                                beamQueue.Enqueue(b);
+                            }
                             break;
                         case '|':
                             if (beam.direction == Direction.Up || beam.direction == Direction.Down) { break; }
                             coords = (beam.row, beam.col);
-                            if (usedSplitters.Contains(coords)) { break; }
-                            b = new EnergyBeam
+                            if (!beam.usedSplitters.Contains(coords))
                             {
-                                row = beam.row,
-                                col = beam.col,
-                                direction = beam.direction == Direction.Right ? Direction.Left : Direction.Right,
-                            };
-                            beamQueue.Enqueue(b);
-                            usedSplitters.Add(coords);
+                                beam.direction = Direction.Down;
+                                beam.usedSplitters.Add(coords);
+                                b = new EnergyBeam
+                                {
+                                    row = beam.row,
+                                    col = beam.col,
+                                    direction = Direction.Up,
+                                };
+                                b.usedSplitters.Add(coords);
+                                beamQueue.Enqueue(b);
+                            }
                             break;
                         case '/':
                             if (beam.direction == Direction.Right) { newDirection = Direction.Up; }
@@ -112,6 +120,7 @@ public class EnergyBeam
     required public int col { get; set; }
     required public Direction direction { get; set; }
     public bool hitEdge = false;
+    public List<(int, int)> usedSplitters = new List<(int x, int y)>();
     public void travel(EnergyPuzzle puzzle)
     {
         switch (direction)
