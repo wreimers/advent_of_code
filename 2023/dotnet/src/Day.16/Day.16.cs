@@ -18,6 +18,7 @@
             }
             // Console.WriteLine();
             puzzle.display();
+            var usedSplitters = new List<(int, int)>();
             var beamQueue = new Queue<EnergyBeam>();
             var b = new EnergyBeam
             {
@@ -30,8 +31,10 @@
             {
                 Console.WriteLine($"beamQueue.Count:{beamQueue.Count}");
                 var beam = beamQueue.Dequeue();
+                Console.WriteLine($"beamQueue.Count:{beamQueue.Count} beam:{beam}");
                 while (beam.hitEdge is false)
                 {
+                    Console.WriteLine($"beam.row:{beam.row} beam.col:{beam.col} beam.direction:{beam.direction}");
                     if (!energizedCoordinates.Contains((beam.row, beam.col)))
                     {
                         energizedCoordinates.Add((beam.row, beam.col));
@@ -44,34 +47,34 @@
                         case '-':
                             if (beam.direction == Direction.Right || beam.direction == Direction.Left) { break; }
                             coords = (beam.row, beam.col);
-                            if (!beam.usedSplitters.Contains(coords))
+                            if (!usedSplitters.Contains(coords))
                             {
+                                Console.WriteLine($"beam.split '-' usedSplitters:{String.Join(", ", usedSplitters)}");
                                 beam.direction = Direction.Left;
-                                beam.usedSplitters.Add(coords);
+                                usedSplitters.Add(coords);
                                 b = new EnergyBeam
                                 {
                                     row = beam.row,
                                     col = beam.col,
                                     direction = Direction.Right,
                                 };
-                                b.usedSplitters.Add(coords);
                                 beamQueue.Enqueue(b);
                             }
                             break;
                         case '|':
                             if (beam.direction == Direction.Up || beam.direction == Direction.Down) { break; }
                             coords = (beam.row, beam.col);
-                            if (!beam.usedSplitters.Contains(coords))
+                            if (!usedSplitters.Contains(coords))
                             {
+                                Console.WriteLine($"beam.split '|' usedSplitters:{String.Join(", ", usedSplitters)}");
                                 beam.direction = Direction.Down;
-                                beam.usedSplitters.Add(coords);
+                                usedSplitters.Add(coords);
                                 b = new EnergyBeam
                                 {
                                     row = beam.row,
                                     col = beam.col,
                                     direction = Direction.Up,
                                 };
-                                b.usedSplitters.Add(coords);
                                 beamQueue.Enqueue(b);
                             }
                             break;
@@ -101,6 +104,7 @@
             {
                 Console.WriteLine($"energized {coord}");
             }
+            Console.WriteLine($"total:{energizedCoordinates.Count}");
         }
     }
 }
