@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Data;
+using System.Diagnostics;
 
 namespace Day18
 {
@@ -68,15 +69,53 @@ namespace Day18
             int rows = upCubes + downCubes + 1;
             int cols = leftCubes + rightCubes + 1;
             var holes = new CubeHole[rows, cols];
-            int startRow = upCubes + 1;
-            int startCol = leftCubes + 1;
-
+            int currentRow = upCubes + 1;
+            int currentCol = leftCubes + 1;
+            holes[currentRow, currentCol] = new CubeHole
+            {
+                row = currentRow,
+                col = currentCol,
+                colorCode = null,
+            };
+            foreach (Instruction i in instructions)
+            {
+                for (int m = 0; m < i.magnitude; m += 1)
+                {
+                    switch (i.direction)
+                    {
+                        case Direction.Right:
+                            currentCol += 1;
+                            break;
+                        case Direction.Left:
+                            currentCol -= 1;
+                            break;
+                        case Direction.Up:
+                            currentRow += 1;
+                            break;
+                        case Direction.Down:
+                            currentRow -= 1;
+                            break;
+                    }
+                    holes[currentRow, currentCol] = new CubeHole
+                    {
+                        row = currentRow,
+                        col = currentCol,
+                        colorCode = i.colorCode,
+                    };
+                }
+            }
         }
+
+
     }
 }
 
+
 public class CubeHole
 {
+    public required int row { get; set; }
+    public required int col { get; set; }
+    public required string? colorCode { get; set; }
 
 }
 public enum Direction
