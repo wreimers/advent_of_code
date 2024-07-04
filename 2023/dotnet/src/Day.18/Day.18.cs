@@ -4,7 +4,7 @@ namespace Day18
 {
     internal class Program
     {
-        private static string DATA_FILE = "var/day_18/sample.txt";
+        private static string DATA_FILE = "var/day_18/input.txt";
 
         static void Main(string[] args)
         {
@@ -41,15 +41,44 @@ namespace Day18
                 };
                 instructions.Add(i);
             }
+            int leftCubes = 0;
+            int rightCubes = 0;
+            int upCubes = 0;
+            int downCubes = 0;
             foreach (Instruction i in instructions)
             {
+                switch (i.direction)
+                {
+                    case Direction.Right:
+                        rightCubes += i.magnitude;
+                        break;
+                    case Direction.Left:
+                        leftCubes += i.magnitude;
+                        break;
+                    case Direction.Up:
+                        upCubes += i.magnitude;
+                        break;
+                    case Direction.Down:
+                        downCubes += i.magnitude;
+                        break;
+                }
                 Console.WriteLine(i);
             }
+            Console.WriteLine($"leftCubes:{leftCubes} rightCubes:{rightCubes} upCubes:{upCubes} downCubes:{downCubes}");
+            int rows = upCubes + downCubes + 1;
+            int cols = leftCubes + rightCubes + 1;
+            var holes = new CubeHole[rows, cols];
+            int startRow = upCubes + 1;
+            int startCol = leftCubes + 1;
+
         }
     }
 }
 
+public class CubeHole
+{
 
+}
 public enum Direction
 {
     Right,
@@ -62,7 +91,7 @@ class Instruction
 {
     public required Direction direction { get; set; }
     public required int magnitude { get; set; }
-    public required string colorCode { get; set; }
+    public required string? colorCode { get; set; }
 
     public override string? ToString()
     {
