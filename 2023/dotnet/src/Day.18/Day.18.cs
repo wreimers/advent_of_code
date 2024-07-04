@@ -4,7 +4,7 @@ namespace Day18
 {
     internal class Program
     {
-        private static string DATA_FILE = "var/day_18/input.txt";
+        private static string DATA_FILE = "var/day_18/sample.txt";
 
         static void Main(string[] args)
         {
