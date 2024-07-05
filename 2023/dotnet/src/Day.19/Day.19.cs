@@ -17,7 +17,7 @@ namespace Day19
             using StreamReader reader = new(DATA_FILE);
             while ((rawLine = reader.ReadLine()) != null)
             {
-                Console.WriteLine(rawLine);
+                // Console.WriteLine(rawLine);
                 if (rawLine == "")
                 {
                     readStatus = 'P';
@@ -28,7 +28,7 @@ namespace Day19
                     case 'W':
                         char[] splitters = [',', '{', '}',];
                         string[] tokens = rawLine.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-                        Console.WriteLine(string.Join(", ", tokens));
+                        // Console.WriteLine(string.Join(", ", tokens));
                         var workflow = new Workflow
                         {
                             name = tokens[0],
@@ -48,7 +48,7 @@ namespace Day19
                             var operation = m.Groups[2].ToString().ToCharArray()[0];
                             var value = Int32.Parse(m.Groups[3].ToString());
                             var result = m.Groups[4].ToString();
-                            Console.WriteLine($"category:{category} operation:{operation} value:{value} result:{result}");
+                            // Console.WriteLine($"category:{category} operation:{operation} value:{value} result:{result}");
                             var rule = new Rule
                             {
                                 category = category,
@@ -64,7 +64,7 @@ namespace Day19
                     case 'P':
                         splitters = [',', '{', '}',];
                         tokens = rawLine.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
-                        Console.WriteLine(string.Join(", ", tokens));
+                        // Console.WriteLine(string.Join(", ", tokens));
                         var part = new Part();
                         foreach (string token in tokens)
                         {
@@ -91,7 +91,7 @@ namespace Day19
                             }
                         }
                         parts.Add(part);
-                        Console.WriteLine(part);
+                        // Console.WriteLine(part);
                         break;
                     default:
                         throw new Exception($"INVALID READSTATUS {readStatus}");
@@ -99,9 +99,11 @@ namespace Day19
             }
             foreach (Part p in parts)
             {
-                var currentWorkflow = workflows[0];
+                Console.WriteLine(p);
+                var currentWorkflow = workflowsDict["in"];
                 while (p.status != PartStatus.Accepted && p.status != PartStatus.Rejected)
                 {
+                    Console.WriteLine($"  {currentWorkflow}");
                     currentWorkflow.apply(p);
                     if (p.nextWorkflow is not null)
                     {
@@ -110,6 +112,15 @@ namespace Day19
 
                 }
             }
+            int numberOfAcceptedParts = 0;
+            foreach (Part p in parts)
+            {
+                if (p.status == PartStatus.Accepted)
+                {
+                    numberOfAcceptedParts += 1;
+                }
+            }
+            Console.WriteLine($"numberOfAcceptedParts:{numberOfAcceptedParts}");
         }
     }
 }
@@ -124,22 +135,43 @@ class Workflow
         string result = "";
         foreach (Rule r in rules)
         {
-            Console.WriteLine(r);
+            Console.WriteLine($"    {r}");
             if (r.category == 'x' && r.operation == '<' && p.x < r.value) { result = r.result; }
             else if (r.category == 'x' && r.operation == '>' && p.x > r.value) { result = r.result; }
-            else if (r.category == 'm' && r.operation == '<' && p.x < r.value) { result = r.result; }
-            else if (r.category == 'm' && r.operation == '>' && p.x > r.value) { result = r.result; }
-            else if (r.category == 'a' && r.operation == '<' && p.x < r.value) { result = r.result; }
-            else if (r.category == 'a' && r.operation == '>' && p.x > r.value) { result = r.result; }
-            else if (r.category == 's' && r.operation == '<' && p.x < r.value) { result = r.result; }
-            else if (r.category == 's' && r.operation == '>' && p.x > r.value) { result = r.result; }
-            if (result == "A") { p.status = PartStatus.Accepted; break; }
-            else if (result == "R") { p.status = PartStatus.Rejected; break; }
+            else if (r.category == 'm' && r.operation == '<' && p.m < r.value) { result = r.result; }
+            else if (r.category == 'm' && r.operation == '>' && p.m > r.value) { result = r.result; }
+            else if (r.category == 'a' && r.operation == '<' && p.a < r.value) { result = r.result; }
+            else if (r.category == 'a' && r.operation == '>' && p.a > r.value) { result = r.result; }
+            else if (r.category == 's' && r.operation == '<' && p.s < r.value) { result = r.result; }
+            else if (r.category == 's' && r.operation == '>' && p.s > r.value) { result = r.result; }
+            if (result == "A") { p.status = PartStatus.Accepted; p.nextWorkflow = null; break; }
+            else if (result == "R") { p.status = PartStatus.Rejected; p.nextWorkflow = null; break; }
+            else if (result != "") { p.status = PartStatus.None; p.nextWorkflow = result; break; }
+
         }
         if (result == "")
         {
-            p.nextWorkflow = defaultResult;
+            switch (defaultResult)
+            {
+                case "A":
+                    p.status = PartStatus.Accepted;
+                    p.nextWorkflow = null;
+                    break;
+                case "R":
+                    p.status = PartStatus.Rejected;
+                    p.nextWorkflow = null;
+                    break;
+                default:
+                    p.nextWorkflow = defaultResult;
+                    break;
+            }
+
         }
+        Console.WriteLine($"      result:{result} p.nextWorkflow:{p.nextWorkflow}");
+    }
+    public override string? ToString()
+    {
+        return $"<workflow name:{name} defaultResult:{defaultResult}>";
     }
 }
 
