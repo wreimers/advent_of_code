@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Day20;
 
 namespace Day20
 {
@@ -6,14 +7,16 @@ namespace Day20
     {
         private static string DATA_FILE = "var/day_20/sample2.txt";
         private static int BUTTON_PUSHES = 1000;
+        public static int lowPulsesSent = 0;
+        public static int highPulsesSent = 0;
 
         static void Main(string[] args)
         {
             var moduleDict = new Dictionary<string, CommunicationsModule>();
             var pulseQueue = new Queue<Pulse>();
             var conjunctionModules = new List<CommunicationsModule>();
-            int lowPulsesSent = 0;
-            int highPulsesSent = 0;
+            // int lowPulsesSent = 0;
+            // int highPulsesSent = 0;
             Console.WriteLine("Advent of Code 2023 Day 20");
             string? rawLine;
             using StreamReader reader = new(DATA_FILE);
@@ -174,8 +177,17 @@ public class CommunicationsModule
                 Console.WriteLine($"    enqueue {p}");
                 queue.Enqueue(p);
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException e)
             {
+                Console.WriteLine($"    KEYNOTFOUND {e.Message}");
+                if (frequency == PulseFrequency.High)
+                {
+                    Program.highPulsesSent += 1;
+                }
+                else
+                {
+                    Program.lowPulsesSent += 1;
+                }
                 continue;
             }
         }
