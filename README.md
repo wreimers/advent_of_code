@@ -13,4 +13,4 @@
 | [7](2023/dotnet/src/Day.07)  |      | [17](2023/dotnet/src/Day.17) |      |                              |     |
 | [8](2023/dotnet/src/Day.08)  | ⭐   | [18](2023/dotnet/src/Day.18) |      |                              |     |
 | [9](2023/dotnet/src/Day.09)  |      | [19](2023/dotnet/src/Day.19) |      |                              |     |
-| [10](2023/dotnet/src/Day.10) | ⭐   | [20](2023/dotnet/src/Day.20) |      |                              |     |
+| [10](2023/dotnet/src/Day.10) | ⭐   | [20](2023/dotnet/src/Day.20) | ⭐   |                              |     |

@@ -5,7 +5,7 @@ namespace Day20
 {
     internal class Program
     {
-        private static string DATA_FILE = "var/day_20/sample2.txt";
+        private static string DATA_FILE = "var/day_20/input.txt";
         private static int BUTTON_PUSHES = 1000;
         public static int lowPulsesSent = 0;
         public static int highPulsesSent = 0;
@@ -15,8 +15,6 @@ namespace Day20
             var moduleDict = new Dictionary<string, CommunicationsModule>();
             var pulseQueue = new Queue<Pulse>();
             var conjunctionModules = new List<CommunicationsModule>();
-            // int lowPulsesSent = 0;
-            // int highPulsesSent = 0;
             Console.WriteLine("Advent of Code 2023 Day 20");
             string? rawLine;
             using StreamReader reader = new(DATA_FILE);
