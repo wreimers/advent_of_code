@@ -85,7 +85,8 @@ namespace Day20
                 }
             }
             // process queue until done
-            for (int push = 0; push < BUTTON_PUSHES; push += 1)
+            int push = 0;
+            for (push = 0; push < BUTTON_PUSHES; push += 1)
             {
                 CommunicationsModule b = moduleDict["broadcaster"];
                 pulseQueue.Enqueue(new Pulse
@@ -98,12 +99,21 @@ namespace Day20
                 {
                     Pulse pulse = pulseQueue.Dequeue();
                     if (pulse.frequency == PulseFrequency.High) { highPulsesSent += 1; }
-                    if (pulse.frequency == PulseFrequency.Low) { lowPulsesSent += 1; }
+                    if (pulse.frequency == PulseFrequency.Low)
+                    {
+                        lowPulsesSent += 1;
+                        if (pulse.destinationModule.name == "rx")
+                        {
+                            goto PushCountfound;
+                        }
+                    }
                     Console.WriteLine(pulse);
                     var m = pulse.destinationModule;
                     m.SendPulse(pulse, moduleDict, pulseQueue);
                 }
             }
+        PushCountfound:
+            Console.WriteLine($"push:{push}");
             Console.WriteLine($"lowPulsesSent:{lowPulsesSent}");
             Console.WriteLine($"highPulsesSent:{highPulsesSent}");
             Console.WriteLine($"product:{highPulsesSent * lowPulsesSent}");
@@ -156,7 +166,8 @@ public class CommunicationsModule
                 }
                 break;
             default:
-                throw new Exception("CANNOT SEND A PULSE TO AN INVALID MODULE");
+                Console.WriteLine($"    pulse type None - do nothing");
+                break;
         }
     }
     public void sendPulseDownstream(PulseFrequency frequency, Queue<Pulse> queue, Dictionary<string, CommunicationsModule> moduleMap)
@@ -178,14 +189,28 @@ public class CommunicationsModule
             catch (KeyNotFoundException e)
             {
                 Console.WriteLine($"    KEYNOTFOUND {e.Message}");
-                if (frequency == PulseFrequency.High)
+                CommunicationsModule destination = new CommunicationsModule
                 {
-                    Program.highPulsesSent += 1;
-                }
-                else
+                    name = module,
+                    type = ModuleType.None,
+                };
+                moduleMap[module] = destination;
+                Pulse p = new Pulse
                 {
-                    Program.lowPulsesSent += 1;
-                }
+                    sourceModule = this,
+                    destinationModule = destination,
+                    frequency = frequency,
+                };
+                Console.WriteLine($"    enqueue {p}");
+                queue.Enqueue(p);
+                // if (frequency == PulseFrequency.High)
+                // {
+                //     Program.highPulsesSent += 1;
+                // }
+                // else
+                // {
+                //     Program.lowPulsesSent += 1;
+                // }
                 continue;
             }
         }
