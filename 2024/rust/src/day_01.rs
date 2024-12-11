@@ -36,3 +36,16 @@ impl DataFile {
         }
     }
 }
+
+pub fn part_1(filename: &str) -> i64 {
+    let mut df = DataFile::new(filename);
+
+    let mut sum = 0;
+    while df.left.len() > 0 {
+        let left = df.left.pop().unwrap();
+        let right = df.right.pop().unwrap();
+        sum += (right - left).abs();
+    }
+
+    sum
+}
