@@ -15,7 +15,10 @@ struct SumArgs(i32, i32);
 
 fn add_numbers(args: &SumArgs) -> i32 {
     // args.n1 + args.n2
-    args.0 + args.1
+    // args.0 + args.1
+    match args {
+        SumArgs(n1, n2) => n1 + n2
+    }
 }
 
 fn main() {
