@@ -6,20 +6,21 @@ mod prelude {
 
 use crate::prelude::*;
 
-fn my_print() {
-    println!("Hello, world!");
+struct SumArgs {
+    n1: i32,
+    n2: i32,
 }
 
-fn add_numbers(n1: i32, n2: i32) -> i32 {
-    n1 + n2
+fn add_numbers(args: &SumArgs) -> i32 {
+    args.n1 + args.n2
 }
 
 fn main() {
     let _ms = MyStruct {};
     let _as = Another {};
-    let n1 = 10;
-    let n2 = 20;
-    // my_print();
-    let sum = add_numbers(n1, n2);
-    println!("{} + {} = {}", n1, n2, sum);
+
+    let args = SumArgs {n1: 10, n2: 20};
+    let sum = add_numbers(&args);
+
+    println!("{} + {} = {}", args.n1, args.n2, sum);
 }
