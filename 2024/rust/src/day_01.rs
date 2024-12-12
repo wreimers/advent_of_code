@@ -1,25 +1,26 @@
 use regex::Regex;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 pub struct DataFile {
-    pub left: Vec<i64>,
-    pub right: Vec<i64>,
+    pub left: Vec<i32>,
+    pub right: Vec<i32>,
 }
 
 impl DataFile {
     pub fn new(filename: &str) -> Self {
         let f = File::open(filename).expect("Unable to open file");
         let f = BufReader::new(f);
-        let mut left_vec: Vec<i64> = Vec::new();
-        let mut right_vec: Vec<i64> = Vec::new();
+        let mut left_vec: Vec<i32> = Vec::new();
+        let mut right_vec: Vec<i32> = Vec::new();
         for line in f.lines() {
             let mut num_index = 0;
             let line = line.expect("Unable to read line");
             let re = Regex::new(r"\d+").unwrap();
             for mat in re.find_iter(line.as_str()) {
                 let num_str = &line[mat.start()..mat.end()];
-                let num_int: i64 = num_str.parse().expect("Failed to parse string");
+                let num_int: i32 = num_str.parse().expect("Failed to parse string");
                 if num_index == 0 {
                     left_vec.push(num_int);
                 } else {
@@ -37,7 +38,7 @@ impl DataFile {
     }
 }
 
-pub fn part_1(filename: &str) -> i64 {
+pub fn part_1(filename: &str) -> i32 {
     let mut df = DataFile::new(filename);
 
     let mut sum = 0;
