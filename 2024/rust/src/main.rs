@@ -47,7 +47,8 @@ fn main_day02_part_01() {
             if safe == false && unsafe_once == false {
                 unsafe_once = true;
                 safe = true;
-            } else if safe == false && unsafe_once == true {
+                println!("❌ {}", num_int);
+            } else if safe == false {
                 break;
             } else {
                 last_number = Some(num_int);
@@ -55,8 +56,10 @@ fn main_day02_part_01() {
         }
         if safe == true {
             safe_reports += 1;
+            println!("✅ {}", safe);
+        } else {
+            println!("🚫 {}", safe);
         }
-        println!("{}", safe);
     }
     println!("{}", safe_reports);
 }
