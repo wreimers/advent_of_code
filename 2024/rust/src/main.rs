@@ -9,7 +9,7 @@ fn main() {
 }
 
 fn main_day02_part_01() {
-    let filename = "./var/day_02_input.txt";
+    let filename = "./var/day_02_sample_input.txt";
     let f = File::open(filename).expect("Unable to open file");
     let f = BufReader::new(f);
     let mut safe_reports = 0;
@@ -18,6 +18,7 @@ fn main_day02_part_01() {
         println!("{}", line);
         let re = Regex::new(r"\d+").unwrap();
         let mut safe = true;
+        let mut unsafe_once = false;
         let mut increasing: Option<bool> = None;
         let mut last_number: Option<i32> = None;
         for mat in re.find_iter(line.as_str()) {
@@ -43,10 +44,14 @@ fn main_day02_part_01() {
                     safe = false;
                 }
             }
-            if safe == false {
+            if safe == false && unsafe_once == false {
+                unsafe_once = true;
+                safe = true;
+            } else if safe == false && unsafe_once == true {
                 break;
+            } else {
+                last_number = Some(num_int);
             }
-            last_number = Some(num_int);
         }
         if safe == true {
             safe_reports += 1;
