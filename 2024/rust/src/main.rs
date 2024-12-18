@@ -2,12 +2,16 @@ use regex::Regex;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+mod datafile;
 mod day_01;
 
 fn main() {
-    main_day02_part_01();
+    main_day03_part_01();
 }
 
+fn main_day03_part_01() {}
+
+#[allow(dead_code)]
 fn main_day02_part_01() {
     let filename = "./var/day_02_sample_input.txt";
     let f = File::open(filename).expect("Unable to open file");
