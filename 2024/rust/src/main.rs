@@ -9,7 +9,7 @@ fn main() {
 }
 
 fn main_day02_part_01() {
-    let filename = "./var/day_02_sample_input.txt";
+    let filename = "./var/day_02_input.txt";
     let f = File::open(filename).expect("Unable to open file");
     let f = BufReader::new(f);
     let mut safe_reports = 0;
@@ -38,6 +38,8 @@ fn main_day02_part_01() {
                 } else if increasing.is_none() && difference > 0 {
                     increasing = Some(false);
                 } else if increasing.is_some_and(|x| x == true) && difference > 0 {
+                    safe = false;
+                } else if increasing.is_some_and(|x| x == false) && difference < 0 {
                     safe = false;
                 }
             }
