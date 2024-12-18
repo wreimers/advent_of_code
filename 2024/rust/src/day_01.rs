@@ -50,3 +50,27 @@ pub fn part_1(filename: &str) -> i32 {
 
     sum
 }
+
+pub fn part_2(filename: &str) -> i32 {
+    let mut df = DataFile::new(filename);
+
+    let mut right_map: HashMap<i32, i32> = HashMap::new();
+    while df.right.len() > 0 {
+        let right = df.right.pop().unwrap();
+        if right_map.contains_key(&right) {
+            *right_map.get_mut(&right).unwrap() += 1;
+        } else {
+            right_map.insert(right, 1);
+        }
+    }
+
+    let mut sum = 0;
+    while df.left.len() > 0 {
+        let left = df.left.pop().unwrap();
+        if right_map.contains_key(&left) {
+            sum += left * *right_map.get(&left).unwrap();
+        }
+    }
+
+    sum
+}
