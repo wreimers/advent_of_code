@@ -12,13 +12,21 @@ fn main() {
 }
 
 fn main_day_04_part_01() {
+    let mut file_vec: Vec<Vec<char>> = Vec::new();
     let pathname = "./var/day_04_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
         let line = line.expect("Unable to read line");
-        println!("{}", line);
+        // println!("{}", line);
+        let letters: Vec<char> = line.chars().collect();
+        // println!("{:?}", letters);
+        file_vec.push(letters);
     }
+    // println!("{:?}", file_vec);
+    let rows = file_vec.len();
+    let cols = file_vec[0].len();
+    println!("rows:{} cols:{}", rows, cols);
 }
 
 #[allow(dead_code)]
