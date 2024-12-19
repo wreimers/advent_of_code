@@ -11,7 +11,32 @@ fn main() {
     main_day_03_part_01();
 }
 
-fn main_day_03_part_01() {}
+fn main_day_03_part_01() {
+    let pathname = "./var/day_03_sample_input.txt";
+    let f = File::open(pathname).expect("Unable to open file");
+    let f = BufReader::new(f);
+    let mut sum = 0;
+    for line in f.lines() {
+        let line = line.expect("Unable to read line");
+        println!("{}", line);
+        let re = Regex::new(r"mul\(\d+,\d+\)").unwrap();
+        for mat in re.find_iter(line.as_str()) {
+            let multiplication = &line[mat.start()..mat.end()];
+            println!("{}", multiplication);
+            let mut product = 1;
+            let re = Regex::new(r"\d+").unwrap();
+            for mat in re.find_iter(multiplication) {
+                let number = &multiplication[mat.start()..mat.end()];
+                let number: i32 = number.parse().expect("Failed to parse number");
+                println!("{}", number);
+                product *= number;
+            }
+            println!("{}", product);
+            sum += product;
+        }
+    }
+    println!("{}", sum);
+}
 
 #[allow(dead_code)]
 fn main_day02_part_02() {
