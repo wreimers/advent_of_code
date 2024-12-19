@@ -8,13 +8,16 @@ mod datafile;
 mod day_01;
 
 fn main() {
-    main_day02_part_02();
+    main_day_03_part_01();
 }
 
+fn main_day_03_part_01() {}
+
+#[allow(dead_code)]
 fn main_day02_part_02() {
     let pathname = "./var/day_02_sample_input.txt";
     let mut data: NumbersDataFile = NumbersDataFile::new(pathname);
-    let mut safe_reports: i32 = 0;
+    // let mut safe_reports: i32 = 0;
     while data.lines.len() > 0 {
         let mut line: VecDeque<i32> = data.lines.pop_front().unwrap();
         println!("{:?}", line);
@@ -49,7 +52,7 @@ fn main_day02_part_02() {
             }
         }
         if safe == true {
-            safe_reports += 1;
+            // safe_reports += 1;
             println!("✅ {}", safe);
         } else {
             println!("🚫 {}", safe);
