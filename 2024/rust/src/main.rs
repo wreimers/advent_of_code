@@ -27,6 +27,21 @@ fn main_day_04_part_01() {
     let rows = file_vec.len();
     let cols = file_vec[0].len();
     println!("rows:{} cols:{}", rows, cols);
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            if file_vec[row_idx][col_idx] == 'X' {
+                // scan to the right
+                if col_idx + 3 <= cols {
+                    if file_vec[row_idx][col_idx + 1] == 'M'
+                        && file_vec[row_idx][col_idx + 2] == 'A'
+                        && file_vec[row_idx][col_idx + 3] == 'S'
+                    {
+                        println!("✅");
+                    }
+                }
+            }
+        }
+    }
 }
 
 #[allow(dead_code)]
