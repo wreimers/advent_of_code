@@ -3,17 +3,17 @@ use std::collections::VecDeque;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
-pub struct DataFile {
+pub struct NumbersDataFile {
     #[allow(dead_code)]
     pub pathname: String,
     pub lines: VecDeque<Vec<i32>>,
 }
 
-impl DataFile {
+impl NumbersDataFile {
     pub fn new(pathname: &str) -> Self {
         Self {
             pathname: pathname.to_string(),
-            lines: DataFile::read_lines(pathname),
+            lines: NumbersDataFile::read_lines(pathname),
         }
     }
 
@@ -23,7 +23,7 @@ impl DataFile {
         let f = BufReader::new(f);
         for line in f.lines() {
             let line = line.expect("Unable to read line");
-            let parsed_line: Vec<i32> = DataFile::parse_line(line);
+            let parsed_line: Vec<i32> = NumbersDataFile::parse_line(line);
             result.push_back(parsed_line);
         }
         result

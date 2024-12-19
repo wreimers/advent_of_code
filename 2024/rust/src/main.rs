@@ -1,4 +1,4 @@
-use datafile::DataFile;
+use datafile::NumbersDataFile;
 use regex::Regex;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -12,7 +12,7 @@ fn main() {
 
 fn main_day02_part_02() {
     let pathname = "./var/day_02_sample_input.txt";
-    let mut data: DataFile = DataFile::new(pathname);
+    let mut data: NumbersDataFile = NumbersDataFile::new(pathname);
     while data.lines.len() > 0 {
         let line: Vec<i32> = data.lines.pop_front().unwrap();
         println!("{:#?}", line);
