@@ -16,13 +16,25 @@ fn main_day_03_part_02() {
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     let mut sum = 0;
+    let mut enabled = true;
     for line in f.lines() {
         let line = line.expect("Unable to read line");
         println!("{}", line);
-        let re = Regex::new(r"mul\(\d+,\d+\)").unwrap();
+        let re = Regex::new(r"mul\(\d+,\d+\)|do\(\)|don\'t\(\)").unwrap();
         for mat in re.find_iter(line.as_str()) {
             let multiplication = &line[mat.start()..mat.end()];
             println!("{}", multiplication);
+            if multiplication == "do()" {
+                enabled = true;
+                continue;
+            }
+            if multiplication == "don't()" {
+                enabled = false;
+                continue;
+            }
+            if enabled == false {
+                continue;
+            }
             let mut product = 1;
             let re = Regex::new(r"\d+").unwrap();
             for mat in re.find_iter(multiplication) {
