@@ -1,3 +1,4 @@
+use datafile::DataFile;
 use regex::Regex;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -6,10 +7,17 @@ mod datafile;
 mod day_01;
 
 fn main() {
-    main_day03_part_01();
+    main_day02_part_02();
 }
 
-fn main_day03_part_01() {}
+fn main_day02_part_02() {
+    let pathname = "./var/day_02_sample_input.txt";
+    let mut data: DataFile = DataFile::new(pathname);
+    while data.lines.len() > 0 {
+        let line: Vec<i32> = data.lines.pop_front().unwrap();
+        println!("{:#?}", line);
+    }
+}
 
 #[allow(dead_code)]
 fn main_day02_part_01() {
