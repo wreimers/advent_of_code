@@ -48,6 +48,15 @@ fn main_day_04_part_01() {
                         println!("✅");
                     }
                 }
+                // scan up
+                if row_idx >= 3 {
+                    if file_vec[row_idx - 1][col_idx] == 'M'
+                        && file_vec[row_idx - 2][col_idx] == 'A'
+                        && file_vec[row_idx - 3][col_idx] == 'S'
+                    {
+                        println!("✅");
+                    }
+                }
             }
         }
     }
