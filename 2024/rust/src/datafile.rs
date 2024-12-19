@@ -4,15 +4,12 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 pub struct NumbersDataFile {
-    #[allow(dead_code)]
-    pub pathname: String,
     pub lines: VecDeque<Vec<i32>>,
 }
 
 impl NumbersDataFile {
     pub fn new(pathname: &str) -> Self {
         Self {
-            pathname: pathname.to_string(),
             lines: NumbersDataFile::read_lines(pathname),
         }
     }
