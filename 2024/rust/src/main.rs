@@ -1,5 +1,6 @@
 use datafile::NumbersDataFile;
 use regex::Regex;
+use std::collections::VecDeque;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -13,9 +14,46 @@ fn main() {
 fn main_day02_part_02() {
     let pathname = "./var/day_02_sample_input.txt";
     let mut data: NumbersDataFile = NumbersDataFile::new(pathname);
+    let mut safe_reports: i32 = 0;
     while data.lines.len() > 0 {
-        let line: Vec<i32> = data.lines.pop_front().unwrap();
-        println!("{:#?}", line);
+        let mut line: VecDeque<i32> = data.lines.pop_front().unwrap();
+        println!("{:?}", line);
+
+        let mut last_number: Option<i32> = None;
+        let mut safe = true;
+        let mut increasing: Option<bool> = None;
+        while line.len() > 0 {
+            let number = line.pop_front().unwrap();
+            if last_number.is_none() {
+                last_number = Some(number);
+                continue;
+            }
+            let last_number_int = last_number.unwrap();
+            let difference = last_number_int - number;
+            if difference == 0 || difference.abs() > 3 {
+                println!("❌ {}..{} -> {}", last_number_int, number, difference.abs());
+                safe = false;
+            } else if increasing.is_none() && difference < 0 {
+                increasing = Some(true);
+            } else if increasing.is_none() && difference > 0 {
+                increasing = Some(false);
+            } else if increasing.is_some_and(|x| x == true) && difference > 0 {
+                safe = false;
+            } else if increasing.is_some_and(|x| x == false) && difference < 0 {
+                safe = false;
+            }
+            if safe == false {
+                break;
+            } else {
+                last_number = Some(number);
+            }
+        }
+        if safe == true {
+            safe_reports += 1;
+            println!("✅ {}", safe);
+        } else {
+            println!("🚫 {}", safe);
+        }
     }
 }
 
