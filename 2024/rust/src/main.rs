@@ -8,9 +8,90 @@ mod datafile;
 mod day_01;
 
 fn main() {
-    main_day_06_part_01();
+    main_day_06_part_02();
 }
 
+fn main_day_06_part_02() {
+    let mut guard_map: Vec<Vec<char>> = Vec::new();
+    let pathname = "./var/day_06_sample_input.txt";
+    let f = File::open(pathname).expect("Unable to open file");
+    let f = BufReader::new(f);
+    for line in f.lines() {
+        let line = line.expect("Unable to read line");
+        println!("{}", line);
+        let letters: Vec<char> = line.chars().collect();
+        // println!("{:?}", letters);
+        guard_map.push(letters);
+    }
+    let rows = guard_map.len();
+    let cols = guard_map[0].len();
+    // find guard
+    let mut guard_row = 0;
+    let mut guard_col = 0;
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            if guard_map[row_idx][col_idx] == '^' {
+                guard_row = row_idx;
+                guard_col = col_idx;
+            }
+        }
+    }
+    let mut next_move_off_map = false;
+    let mut guard_direction = Direction::Up;
+    while next_move_off_map == false {
+        println!("guard_row:{} guard_col:{}", guard_row, guard_col);
+
+        // check for off the map
+        if guard_direction == Direction::Up && guard_row == 0
+            || guard_direction == Direction::Right && guard_col == cols - 1
+            || guard_direction == Direction::Down && guard_row == rows - 1
+            || guard_direction == Direction::Left && guard_col == 0
+        {
+            next_move_off_map = true;
+        } else {
+            if guard_direction == Direction::Up {
+                if guard_map[guard_row - 1][guard_col] == '#' {
+                    guard_direction = Direction::Right;
+                } else {
+                    guard_map[guard_row][guard_col] = 'X';
+                    guard_row -= 1;
+                }
+            } else if guard_direction == Direction::Right {
+                if guard_map[guard_row][guard_col + 1] == '#' {
+                    guard_direction = Direction::Down;
+                } else {
+                    guard_map[guard_row][guard_col] = 'X';
+                    guard_col += 1;
+                }
+            } else if guard_direction == Direction::Down {
+                if guard_map[guard_row + 1][guard_col] == '#' {
+                    guard_direction = Direction::Left;
+                } else {
+                    guard_map[guard_row][guard_col] = 'X';
+                    guard_row += 1;
+                }
+            } else if guard_direction == Direction::Left {
+                if guard_map[guard_row][guard_col - 1] == '#' {
+                    guard_direction = Direction::Up;
+                } else {
+                    guard_map[guard_row][guard_col] = 'X';
+                    guard_col -= 1;
+                }
+            }
+        }
+    }
+    let mut locations_visited = 1;
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            if guard_map[row_idx][col_idx] == 'X' {
+                locations_visited += 1;
+            }
+        }
+    }
+    println!("locations_visited:{}", locations_visited);
+}
+
+#[allow(dead_code)]
 fn main_day_06_part_01() {
     let mut guard_map: Vec<Vec<char>> = Vec::new();
     let pathname = "./var/day_06_input.txt";
