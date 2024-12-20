@@ -19,7 +19,6 @@ fn main_day_05_part_02() {
     let f = BufReader::new(f);
     for line in f.lines() {
         let line = line.expect("Unable to read line");
-        // println!("{}", line);
         let rule_re = Regex::new(r"^\d+\|\d+$").unwrap();
         let pages_re = Regex::new(r"\d+").unwrap();
         if rule_re.is_match(&line) {
@@ -30,14 +29,11 @@ fn main_day_05_part_02() {
             let mut pages_line: Vec<String> = Vec::new();
             for mat in pages_re.find_iter(line.as_str()) {
                 let page_number = &line[mat.start()..mat.end()];
-                // let page_number: i32 = page_number.parse().expect("Failed to parse page_number");
                 pages_line.push(page_number.to_string());
             }
             pages.push(pages_line);
         }
     }
-    // println!("{:?}", rules);
-    // println!("{:?}", pages);
     let mut sum = 0;
     for page_order in pages.iter_mut() {
         let mut correct_order = false;
@@ -51,17 +47,12 @@ fn main_day_05_part_02() {
             if broken_rule.is_none() {
                 correct_order = true;
                 continue;
-                // let middle_idx = page_order.len() / 2;
-                // let middle_number: i32 = page_order[middle_idx].parse().unwrap();
-                // println!("✅ {:?} -> {}", page_order, middle_number);
-                // sum += middle_number;
             }
             let broken_rule = broken_rule.unwrap();
             let rule_re = Regex::new(r"^(\d+)\|(\d+)$").unwrap();
             let captures = rule_re.captures(&broken_rule).unwrap();
             let swap1 = captures[1].to_string();
             let swap2 = captures[2].to_string();
-            // println!("swap1:{} swap2:{}", swap1, swap2);
             let swap1_idx = page_order.iter().position(|x| *x == swap1).unwrap();
             let swap2_idx = page_order.iter().position(|x| *x == swap2).unwrap();
             page_order.swap(swap1_idx, swap2_idx);
