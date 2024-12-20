@@ -39,10 +39,13 @@ fn main_day_05_part_02() {
     // println!("{:?}", rules);
     // println!("{:?}", pages);
     let mut sum = 0;
-
     for page_order in pages.iter_mut() {
         let mut correct_order = false;
         let mut broken_rule: Option<String> = None;
+        broken_rule = d05p02_check_order(&rules, &page_order);
+        if broken_rule.is_none() {
+            continue;
+        }
         while correct_order == false {
             broken_rule = d05p02_check_order(&rules, &page_order);
             if broken_rule.is_none() {
@@ -63,6 +66,10 @@ fn main_day_05_part_02() {
             let swap2_idx = page_order.iter().position(|x| *x == swap2).unwrap();
             page_order.swap(swap1_idx, swap2_idx);
         }
+        let middle_idx = page_order.len() / 2;
+        let middle_number: i32 = page_order[middle_idx].parse().unwrap();
+        println!("✅ {:?} -> {}", page_order, middle_number);
+        sum += middle_number;
     }
     println!("sum:{}", sum);
 }
