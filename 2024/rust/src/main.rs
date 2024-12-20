@@ -13,7 +13,7 @@ fn main() {
 
 fn main_day_06_part_01() {
     let mut guard_map: Vec<Vec<char>> = Vec::new();
-    let pathname = "./var/day_06_sample_input.txt";
+    let pathname = "./var/day_06_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
