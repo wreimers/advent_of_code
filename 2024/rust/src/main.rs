@@ -31,12 +31,12 @@ fn main_day_04_part_01() {
         for col_idx in 0..cols {
             if file_vec[row_idx][col_idx] == 'X' {
                 // scan to the right
-                if col_idx + 3 <= cols {
+                if col_idx + 3 < cols {
                     if file_vec[row_idx][col_idx + 1] == 'M'
                         && file_vec[row_idx][col_idx + 2] == 'A'
                         && file_vec[row_idx][col_idx + 3] == 'S'
                     {
-                        println!("✅");
+                        println!("✅ right");
                     }
                 }
                 // scan to the left
@@ -45,7 +45,7 @@ fn main_day_04_part_01() {
                         && file_vec[row_idx][col_idx - 2] == 'A'
                         && file_vec[row_idx][col_idx - 3] == 'S'
                     {
-                        println!("✅");
+                        println!("✅ left");
                     }
                 }
                 // scan up
@@ -54,7 +54,25 @@ fn main_day_04_part_01() {
                         && file_vec[row_idx - 2][col_idx] == 'A'
                         && file_vec[row_idx - 3][col_idx] == 'S'
                     {
-                        println!("✅");
+                        println!("✅ up");
+                    }
+                }
+                // scan down
+                if row_idx + 3 < rows {
+                    if file_vec[row_idx + 1][col_idx] == 'M'
+                        && file_vec[row_idx + 2][col_idx] == 'A'
+                        && file_vec[row_idx + 3][col_idx] == 'S'
+                    {
+                        println!("✅ down");
+                    }
+                }
+                // scan diagonally up-right
+                if row_idx >= 3 && col_idx + 3 < cols {
+                    if file_vec[row_idx - 1][col_idx + 1] == 'M'
+                        && file_vec[row_idx - 2][col_idx + 2] == 'A'
+                        && file_vec[row_idx - 3][col_idx + 3] == 'S'
+                    {
+                        println!("✅ up-right");
                     }
                 }
             }
