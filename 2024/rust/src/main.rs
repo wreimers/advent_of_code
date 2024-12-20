@@ -38,6 +38,28 @@ fn main_day_05_part_01() {
     }
     println!("{:?}", rules);
     println!("{:?}", pages);
+    let mut sum = 0;
+    for page_order in pages.iter() {
+        let mut correct_order = true;
+        for candidate_idx in 0..(page_order.len() - 1) {
+            let candidate = &page_order[candidate_idx];
+            for check_idx in (candidate_idx + 1)..page_order.len() {
+                let check = &page_order[check_idx];
+                let rule = check.to_owned() + "|" + candidate.as_str();
+                if rules.contains(&rule) {
+                    println!("❌ {} {:?}", rule, page_order);
+                    correct_order = false;
+                }
+            }
+        }
+        if correct_order == true {
+            let middle_idx = page_order.len() / 2;
+            let middle_number: i32 = page_order[middle_idx].parse().unwrap();
+            println!("✅ {:?} -> {}", page_order, middle_number);
+            sum += middle_number;
+        }
+    }
+    println!("sum:{}", sum);
 }
 
 #[allow(dead_code)]
