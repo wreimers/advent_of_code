@@ -8,9 +8,84 @@ mod datafile;
 mod day_01;
 
 fn main() {
-    main_day_05_part_01();
+    main_day_05_part_02();
 }
 
+fn main_day_05_part_02() {
+    let mut rules: HashSet<String> = HashSet::new();
+    let mut pages: Vec<Vec<String>> = Vec::new();
+    let pathname = "./var/day_05_sample_input.txt";
+    let f = File::open(pathname).expect("Unable to open file");
+    let f = BufReader::new(f);
+    for line in f.lines() {
+        let line = line.expect("Unable to read line");
+        println!("{}", line);
+        let rule_re = Regex::new(r"^\d+\|\d+$").unwrap();
+        let pages_re = Regex::new(r"\d+").unwrap();
+        if rule_re.is_match(&line) {
+            rules.insert(line);
+        } else if line == "" {
+            continue;
+        } else {
+            let mut pages_line: Vec<String> = Vec::new();
+            for mat in pages_re.find_iter(line.as_str()) {
+                let page_number = &line[mat.start()..mat.end()];
+                // let page_number: i32 = page_number.parse().expect("Failed to parse page_number");
+                pages_line.push(page_number.to_string());
+            }
+            pages.push(pages_line);
+        }
+    }
+    println!("{:?}", rules);
+    println!("{:?}", pages);
+    let mut sum = 0;
+    for page_order in pages.iter() {
+        let (correct_order, broken_rule) = d05p02_check_order(&rules, &page_order);
+        // let mut correct_order = true;
+        // for candidate_idx in 0..(page_order.len() - 1) {
+        //     let candidate = &page_order[candidate_idx];
+        //     for check_idx in (candidate_idx + 1)..page_order.len() {
+        //         let check = &page_order[check_idx];
+        //         let rule = check.to_owned() + "|" + candidate.as_str();
+        //         if rules.contains(&rule) {
+        //             println!("❌ {} {:?}", rule, page_order);
+        //             correct_order = false;
+        //         }
+        //     }
+        // }
+        if correct_order == true {
+            let middle_idx = page_order.len() / 2;
+            let middle_number: i32 = page_order[middle_idx].parse().unwrap();
+            println!("✅ {:?} -> {}", page_order, middle_number);
+            sum += middle_number;
+        }
+    }
+    println!("sum:{}", sum);
+}
+
+fn d05p02_check_order(rules: &HashSet<String>, page_order: &Vec<String>) -> (bool, Option<String>) {
+    let mut correct_order = true;
+    let mut broken_rule = None;
+    for candidate_idx in 0..(page_order.len() - 1) {
+        let candidate = &page_order[candidate_idx];
+        for check_idx in (candidate_idx + 1)..page_order.len() {
+            let check = &page_order[check_idx];
+            let rule = check.to_owned() + "|" + candidate.as_str();
+            if rules.contains(&rule) {
+                println!("❌ {} {:?}", rule, page_order);
+                broken_rule = Some(rule);
+                correct_order = false;
+                break;
+            }
+        }
+        if broken_rule.is_some() {
+            break;
+        }
+    }
+    (correct_order, broken_rule)
+}
+
+#[allow(dead_code)]
 fn main_day_05_part_01() {
     let mut rules: HashSet<String> = HashSet::new();
     let mut pages: Vec<Vec<String>> = Vec::new();
