@@ -8,9 +8,12 @@ mod datafile;
 mod day_01;
 
 fn main() {
-    main_day_04_part_02();
+    main_day_05_part_01();
 }
 
+fn main_day_05_part_01() {}
+
+#[allow(dead_code)]
 fn main_day_04_part_02() {
     let mut file_vec: Vec<Vec<char>> = Vec::new();
     let pathname = "./var/day_04_input.txt";
