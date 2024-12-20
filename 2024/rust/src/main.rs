@@ -14,7 +14,7 @@ fn main() {
 fn main_day_05_part_01() {
     let mut rules: HashSet<String> = HashSet::new();
     let mut pages: Vec<Vec<String>> = Vec::new();
-    let pathname = "./var/day_05_sample_input.txt";
+    let pathname = "./var/day_05_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
