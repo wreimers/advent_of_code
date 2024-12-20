@@ -58,7 +58,7 @@ fn main_day_05_part_02() {
             let captures = rule_re.captures(&broken_rule).unwrap();
             let swap1 = captures[1].to_string();
             let swap2 = captures[2].to_string();
-            println!("swap1:{} swap2:{}", swap1, swap2);
+            // println!("swap1:{} swap2:{}", swap1, swap2);
             let swap1_idx = page_order.iter().position(|x| *x == swap1).unwrap();
             let swap2_idx = page_order.iter().position(|x| *x == swap2).unwrap();
             page_order.swap(swap1_idx, swap2_idx);
