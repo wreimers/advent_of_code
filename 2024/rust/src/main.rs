@@ -8,9 +8,12 @@ mod datafile;
 mod day_01;
 
 fn main() {
-    main_day_05_part_02();
+    main_day_06_part_01();
 }
 
+fn main_day_06_part_01() {}
+
+#[allow(dead_code)]
 fn main_day_05_part_02() {
     let mut rules: HashSet<String> = HashSet::new();
     let mut pages: Vec<Vec<String>> = Vec::new();
@@ -65,6 +68,7 @@ fn main_day_05_part_02() {
     println!("sum:{}", sum);
 }
 
+#[allow(dead_code)]
 fn d05p02_check_order(rules: &HashSet<String>, page_order: &Vec<String>) -> Option<String> {
     let mut broken_rule = None;
     for candidate_idx in 0..(page_order.len() - 1) {
