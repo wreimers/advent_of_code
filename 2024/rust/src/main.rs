@@ -20,9 +20,28 @@ fn main_day_06_part_01() {
         let line = line.expect("Unable to read line");
         println!("{}", line);
         let letters: Vec<char> = line.chars().collect();
-        println!("{:?}", letters);
+        // println!("{:?}", letters);
         guard_map.push(letters);
     }
+    let rows = guard_map.len();
+    let cols = guard_map[0].len();
+    // find guard
+    let mut guard_row = 0;
+    let mut guard_col = 0;
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            if guard_map[row_idx][col_idx] == '^' {
+                guard_row = row_idx;
+                guard_col = col_idx;
+            }
+        }
+    }
+    println!("guard_row:{} guard_col:{}", guard_row, guard_col);
+
+    // determine direction
+    // check for obstacles
+    // move guard, check for obstacles
+    // found obstacle, turn right
 }
 
 #[allow(dead_code)]
