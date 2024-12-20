@@ -56,14 +56,39 @@ fn main_day_06_part_01() {
                     guard_map[guard_row][guard_col] = 'X';
                     guard_row -= 1;
                 }
+            } else if guard_direction == Direction::Right {
+                if guard_map[guard_row][guard_col + 1] == '#' {
+                    guard_direction = Direction::Down;
+                } else {
+                    guard_map[guard_row][guard_col] = 'X';
+                    guard_col += 1;
+                }
+            } else if guard_direction == Direction::Down {
+                if guard_map[guard_row + 1][guard_col] == '#' {
+                    guard_direction = Direction::Left;
+                } else {
+                    guard_map[guard_row][guard_col] = 'X';
+                    guard_row += 1;
+                }
+            } else if guard_direction == Direction::Left {
+                if guard_map[guard_row][guard_col - 1] == '#' {
+                    guard_direction = Direction::Up;
+                } else {
+                    guard_map[guard_row][guard_col] = 'X';
+                    guard_col -= 1;
+                }
             }
         }
     }
-
-    // check for obstacles
-
-    // move guard, check for obstacles
-    // found obstacle, turn right
+    let mut locations_visited = 1;
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            if guard_map[row_idx][col_idx] == 'X' {
+                locations_visited += 1;
+            }
+        }
+    }
+    println!("locations_visited:{}", locations_visited);
 }
 
 #[derive(PartialEq)]
