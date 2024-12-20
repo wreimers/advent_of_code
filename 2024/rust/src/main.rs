@@ -1,6 +1,6 @@
 use datafile::NumbersDataFile;
 use regex::Regex;
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -12,13 +12,32 @@ fn main() {
 }
 
 fn main_day_05_part_01() {
+    let mut rules: HashSet<String> = HashSet::new();
+    let mut pages: Vec<Vec<String>> = Vec::new();
     let pathname = "./var/day_05_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
         let line = line.expect("Unable to read line");
         println!("{}", line);
+        let rule_re = Regex::new(r"^\d+\|\d+$").unwrap();
+        let pages_re = Regex::new(r"\d+").unwrap();
+        if rule_re.is_match(&line) {
+            rules.insert(line);
+        } else if line == "" {
+            continue;
+        } else {
+            let mut pages_line: Vec<String> = Vec::new();
+            for mat in pages_re.find_iter(line.as_str()) {
+                let page_number = &line[mat.start()..mat.end()];
+                // let page_number: i32 = page_number.parse().expect("Failed to parse page_number");
+                pages_line.push(page_number.to_string());
+            }
+            pages.push(pages_line);
+        }
     }
+    println!("{:?}", rules);
+    println!("{:?}", pages);
 }
 
 #[allow(dead_code)]
