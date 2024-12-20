@@ -75,6 +75,15 @@ fn main_day_04_part_01() {
                         println!("✅ up-right");
                     }
                 }
+                // scan diagonally up-left
+                if row_idx >= 3 && col_idx >= 3 {
+                    if file_vec[row_idx - 1][col_idx - 1] == 'M'
+                        && file_vec[row_idx - 2][col_idx - 2] == 'A'
+                        && file_vec[row_idx - 3][col_idx - 3] == 'S'
+                    {
+                        println!("✅ up-left");
+                    }
+                }
             }
         }
     }
