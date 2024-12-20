@@ -27,6 +27,7 @@ fn main_day_04_part_01() {
     let rows = file_vec.len();
     let cols = file_vec[0].len();
     println!("rows:{} cols:{}", rows, cols);
+    let mut xmas_count = 0;
     for row_idx in 0..rows {
         for col_idx in 0..cols {
             if file_vec[row_idx][col_idx] == 'X' {
@@ -37,6 +38,7 @@ fn main_day_04_part_01() {
                         && file_vec[row_idx][col_idx + 3] == 'S'
                     {
                         println!("✅ right");
+                        xmas_count += 1;
                     }
                 }
                 // scan to the left
@@ -46,6 +48,7 @@ fn main_day_04_part_01() {
                         && file_vec[row_idx][col_idx - 3] == 'S'
                     {
                         println!("✅ left");
+                        xmas_count += 1;
                     }
                 }
                 // scan up
@@ -55,6 +58,7 @@ fn main_day_04_part_01() {
                         && file_vec[row_idx - 3][col_idx] == 'S'
                     {
                         println!("✅ up");
+                        xmas_count += 1;
                     }
                 }
                 // scan down
@@ -64,6 +68,7 @@ fn main_day_04_part_01() {
                         && file_vec[row_idx + 3][col_idx] == 'S'
                     {
                         println!("✅ down");
+                        xmas_count += 1;
                     }
                 }
                 // scan diagonally up-right
@@ -73,6 +78,7 @@ fn main_day_04_part_01() {
                         && file_vec[row_idx - 3][col_idx + 3] == 'S'
                     {
                         println!("✅ up-right");
+                        xmas_count += 1;
                     }
                 }
                 // scan diagonally up-left
@@ -82,6 +88,7 @@ fn main_day_04_part_01() {
                         && file_vec[row_idx - 3][col_idx - 3] == 'S'
                     {
                         println!("✅ up-left");
+                        xmas_count += 1;
                     }
                 }
                 // scan diagonally down-right
@@ -91,11 +98,13 @@ fn main_day_04_part_01() {
                         && file_vec[row_idx + 3][col_idx + 3] == 'S'
                     {
                         println!("✅ down-right");
+                        xmas_count += 1;
                     }
                 }
             }
         }
     }
+    println!("xmas_count:{}", xmas_count);
 }
 
 #[allow(dead_code)]
