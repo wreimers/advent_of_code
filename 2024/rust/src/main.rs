@@ -19,7 +19,7 @@ fn main_day_05_part_02() {
     let f = BufReader::new(f);
     for line in f.lines() {
         let line = line.expect("Unable to read line");
-        println!("{}", line);
+        // println!("{}", line);
         let rule_re = Regex::new(r"^\d+\|\d+$").unwrap();
         let pages_re = Regex::new(r"\d+").unwrap();
         if rule_re.is_match(&line) {
@@ -36,35 +36,38 @@ fn main_day_05_part_02() {
             pages.push(pages_line);
         }
     }
-    println!("{:?}", rules);
-    println!("{:?}", pages);
+    // println!("{:?}", rules);
+    // println!("{:?}", pages);
     let mut sum = 0;
-    for page_order in pages.iter() {
-        let (correct_order, broken_rule) = d05p02_check_order(&rules, &page_order);
-        // let mut correct_order = true;
-        // for candidate_idx in 0..(page_order.len() - 1) {
-        //     let candidate = &page_order[candidate_idx];
-        //     for check_idx in (candidate_idx + 1)..page_order.len() {
-        //         let check = &page_order[check_idx];
-        //         let rule = check.to_owned() + "|" + candidate.as_str();
-        //         if rules.contains(&rule) {
-        //             println!("❌ {} {:?}", rule, page_order);
-        //             correct_order = false;
-        //         }
-        //     }
-        // }
-        if correct_order == true {
-            let middle_idx = page_order.len() / 2;
-            let middle_number: i32 = page_order[middle_idx].parse().unwrap();
-            println!("✅ {:?} -> {}", page_order, middle_number);
-            sum += middle_number;
+
+    for page_order in pages.iter_mut() {
+        let mut correct_order = false;
+        let mut broken_rule: Option<String> = None;
+        while correct_order == false {
+            broken_rule = d05p02_check_order(&rules, &page_order);
+            if broken_rule.is_none() {
+                correct_order = true;
+                continue;
+                // let middle_idx = page_order.len() / 2;
+                // let middle_number: i32 = page_order[middle_idx].parse().unwrap();
+                // println!("✅ {:?} -> {}", page_order, middle_number);
+                // sum += middle_number;
+            }
+            let broken_rule = broken_rule.unwrap();
+            let rule_re = Regex::new(r"^(\d+)\|(\d+)$").unwrap();
+            let captures = rule_re.captures(&broken_rule).unwrap();
+            let swap1 = captures[1].to_string();
+            let swap2 = captures[2].to_string();
+            println!("swap1:{} swap2:{}", swap1, swap2);
+            let swap1_idx = page_order.iter().position(|x| *x == swap1).unwrap();
+            let swap2_idx = page_order.iter().position(|x| *x == swap2).unwrap();
+            page_order.swap(swap1_idx, swap2_idx);
         }
     }
     println!("sum:{}", sum);
 }
 
-fn d05p02_check_order(rules: &HashSet<String>, page_order: &Vec<String>) -> (bool, Option<String>) {
-    let mut correct_order = true;
+fn d05p02_check_order(rules: &HashSet<String>, page_order: &Vec<String>) -> Option<String> {
     let mut broken_rule = None;
     for candidate_idx in 0..(page_order.len() - 1) {
         let candidate = &page_order[candidate_idx];
@@ -74,7 +77,6 @@ fn d05p02_check_order(rules: &HashSet<String>, page_order: &Vec<String>) -> (boo
             if rules.contains(&rule) {
                 println!("❌ {} {:?}", rule, page_order);
                 broken_rule = Some(rule);
-                correct_order = false;
                 break;
             }
         }
@@ -82,7 +84,7 @@ fn d05p02_check_order(rules: &HashSet<String>, page_order: &Vec<String>) -> (boo
             break;
         }
     }
-    (correct_order, broken_rule)
+    broken_rule
 }
 
 #[allow(dead_code)]
