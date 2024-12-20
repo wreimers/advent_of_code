@@ -13,7 +13,7 @@ fn main() {
 
 fn main_day_04_part_02() {
     let mut file_vec: Vec<Vec<char>> = Vec::new();
-    let pathname = "./var/day_04_input.txt";
+    let pathname = "./var/day_04_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -28,6 +28,47 @@ fn main_day_04_part_02() {
     let cols = file_vec[0].len();
     println!("rows:{} cols:{}", rows, cols);
     let mut x_mas_count = 0;
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            if file_vec[row_idx][col_idx] == 'A' {
+                if col_idx + 1 < cols && col_idx >= 1 && row_idx + 1 < rows && row_idx >= 1 {
+                    if file_vec[row_idx - 1][col_idx - 1] == 'M'
+                        && file_vec[row_idx - 1][col_idx + 1] == 'M'
+                        && file_vec[row_idx + 1][col_idx - 1] == 'S'
+                        && file_vec[row_idx + 1][col_idx + 1] == 'S'
+                    {
+                        println!("✅ MAS/MAS");
+                        x_mas_count += 1;
+                    }
+                    if file_vec[row_idx - 1][col_idx - 1] == 'S'
+                        && file_vec[row_idx - 1][col_idx + 1] == 'S'
+                        && file_vec[row_idx + 1][col_idx - 1] == 'M'
+                        && file_vec[row_idx + 1][col_idx + 1] == 'M'
+                    {
+                        println!("✅ SAM/SAM");
+                        x_mas_count += 1;
+                    }
+                    if file_vec[row_idx - 1][col_idx - 1] == 'M'
+                        && file_vec[row_idx - 1][col_idx + 1] == 'S'
+                        && file_vec[row_idx + 1][col_idx - 1] == 'M'
+                        && file_vec[row_idx + 1][col_idx + 1] == 'S'
+                    {
+                        println!("✅ MAS/SAM");
+                        x_mas_count += 1;
+                    }
+                    if file_vec[row_idx - 1][col_idx - 1] == 'S'
+                        && file_vec[row_idx - 1][col_idx + 1] == 'M'
+                        && file_vec[row_idx + 1][col_idx - 1] == 'S'
+                        && file_vec[row_idx + 1][col_idx + 1] == 'M'
+                    {
+                        println!("✅ SAM/MAS");
+                        x_mas_count += 1;
+                    }
+                }
+            }
+        }
+    }
+    println!("x_mas_count:{}", x_mas_count);
 }
 
 #[allow(dead_code)]
