@@ -36,12 +36,42 @@ fn main_day_06_part_01() {
             }
         }
     }
-    println!("guard_row:{} guard_col:{}", guard_row, guard_col);
+    let mut next_move_off_map = false;
+    let mut guard_direction = Direction::Up;
+    while next_move_off_map == false {
+        println!("guard_row:{} guard_col:{}", guard_row, guard_col);
 
-    // determine direction
+        // check for off the map
+        if guard_direction == Direction::Up && guard_row == 0
+            || guard_direction == Direction::Right && guard_col == cols - 1
+            || guard_direction == Direction::Down && guard_row == rows - 1
+            || guard_direction == Direction::Left && guard_col == 0
+        {
+            next_move_off_map = true;
+        } else {
+            if guard_direction == Direction::Up {
+                if guard_map[guard_row - 1][guard_col] == '#' {
+                    guard_direction = Direction::Right;
+                } else {
+                    guard_map[guard_row][guard_col] = 'X';
+                    guard_row -= 1;
+                }
+            }
+        }
+    }
+
     // check for obstacles
+
     // move guard, check for obstacles
     // found obstacle, turn right
+}
+
+#[derive(PartialEq)]
+enum Direction {
+    Up,
+    Right,
+    Down,
+    Left,
 }
 
 #[allow(dead_code)]
