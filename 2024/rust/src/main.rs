@@ -13,7 +13,7 @@ fn main() {
 }
 
 fn main_day_07_part_01() {
-    let pathname = "./var/day_07_sample_input.txt";
+    let pathname = "./var/day_07_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     let mut possible_equations = 0;
