@@ -1,4 +1,5 @@
 use datafile::NumbersDataFile;
+use itertools::Itertools;
 use regex::Regex;
 use std::collections::{HashSet, VecDeque};
 use std::fs::File;
@@ -15,11 +16,53 @@ fn main_day_07_part_01() {
     let pathname = "./var/day_07_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
+    let mut possible_equations = 0;
+    let mut sum = 0;
     for line in f.lines() {
         let line = line.expect("Unable to read line");
         println!("{}", line);
         let re = Regex::new(r"\d+").unwrap();
+        let captures: Vec<&str> = re.find_iter(line.as_str()).map(|x| x.as_str()).collect();
+
+        let mut operands: Vec<char> = Vec::new();
+        for _ in 1..(captures.len() - 1) {
+            operands.push('+');
+            operands.push('*');
+        }
+        println!("operands:{:?}", operands);
+        // let operands = vec!['+', '*', '+', '*'];
+        let combinations: HashSet<_> = operands
+            .into_iter()
+            .combinations(captures.len() - 2)
+            .collect();
+        println!("combinations:{:?}", combinations);
+        let target_value: i64 = captures[0].parse().unwrap();
+        for comb in combinations {
+            println!("combination:{:?}", comb);
+            let mut value = 0;
+            for idx in 1..(captures.len()) {
+                let operand = captures[idx].parse().unwrap();
+                if value == 0 {
+                    value = operand;
+                } else {
+                    let operator = comb[idx - 2];
+                    if operator == '+' {
+                        value += operand;
+                    } else if operator == '*' {
+                        value *= operand;
+                    }
+                }
+                println!("target_value:{} value:{}", target_value, value);
+            }
+            if value == target_value {
+                println!("found target value with combination:{:?}", comb);
+                possible_equations += 1;
+                sum += target_value;
+                break;
+            }
+        }
     }
+    println!("possible_equations:{} sum:{}", possible_equations, sum);
 }
 
 #[allow(dead_code)]
