@@ -80,15 +80,6 @@ fn main_day_06_part_02() {
             }
         }
     }
-    let mut locations_visited = 1;
-    for row_idx in 0..rows {
-        for col_idx in 0..cols {
-            if guard_map[row_idx][col_idx] == 'X' {
-                locations_visited += 1;
-            }
-        }
-    }
-    println!("locations_visited:{}", locations_visited);
 }
 
 #[allow(dead_code)]
