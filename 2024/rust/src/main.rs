@@ -207,6 +207,7 @@ fn main_day_05_part_02() {
     let mut sum = 0;
     for page_order in pages.iter_mut() {
         let mut correct_order = false;
+        #[allow(unused_assignments)]
         let mut broken_rule: Option<String> = None;
         broken_rule = d05p02_check_order(&rules, &page_order);
         if broken_rule.is_none() {
