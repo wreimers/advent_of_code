@@ -23,7 +23,6 @@ fn main_day_06_part_02() {
         // println!("{:?}", letters);
         guard_map.push(letters);
     }
-    let guard_map_original = guard_map.clone();
     let rows = guard_map.len();
     let cols = guard_map[0].len();
     // find guard
@@ -37,10 +36,16 @@ fn main_day_06_part_02() {
             }
         }
     }
+
+    let guard_map_original = guard_map.clone();
+    let guard_row_original = guard_row;
+    let guard_col_original = guard_col;
     let mut loop_obstructions = 0;
     for row_idx in 0..rows {
         for col_idx in 0..cols {
             guard_map = guard_map_original.clone();
+            guard_row = guard_row_original;
+            guard_col = guard_col_original;
             if row_idx == guard_row && col_idx == guard_col {
                 continue;
             }
