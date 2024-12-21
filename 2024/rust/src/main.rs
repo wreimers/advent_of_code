@@ -28,6 +28,7 @@ fn main_day_07_part_02() {
         for _ in 1..(captures.len() - 1) {
             operands.push('+');
             operands.push('*');
+            operands.push('|');
         }
         println!("operands:{:?}", operands);
         // let operands = vec!['+', '*', '+', '*'];
@@ -50,6 +51,8 @@ fn main_day_07_part_02() {
                         value += operand;
                     } else if operator == '*' {
                         value *= operand;
+                    } else if operator == '|' {
+                        value = (value.to_string() + &operand.to_string()).parse().unwrap();
                     }
                 }
                 println!("target_value:{} value:{}", target_value, value);
@@ -65,6 +68,7 @@ fn main_day_07_part_02() {
     println!("possible_equations:{} sum:{}", possible_equations, sum);
 }
 
+#[allow(dead_code)]
 fn main_day_07_part_01() {
     let pathname = "./var/day_07_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
