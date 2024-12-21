@@ -18,11 +18,12 @@ fn main_day_06_part_02() {
     let f = BufReader::new(f);
     for line in f.lines() {
         let line = line.expect("Unable to read line");
-        println!("{}", line);
+        // println!("{}", line);
         let letters: Vec<char> = line.chars().collect();
         // println!("{:?}", letters);
         guard_map.push(letters);
     }
+    let guard_map_original = guard_map.clone();
     let rows = guard_map.len();
     let cols = guard_map[0].len();
     // find guard
@@ -36,50 +37,79 @@ fn main_day_06_part_02() {
             }
         }
     }
-    let mut next_move_off_map = false;
-    let mut guard_direction = Direction::Up;
-    while next_move_off_map == false {
-        println!("guard_row:{} guard_col:{}", guard_row, guard_col);
+    let mut loop_obstructions = 0;
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            guard_map = guard_map_original.clone();
+            if row_idx == guard_row && col_idx == guard_col {
+                continue;
+            }
+            if guard_map[row_idx][col_idx] == '#' {
+                continue;
+            }
+            guard_map[row_idx][col_idx] = '#';
+            println!("obstruction row:{} col:{}", row_idx, col_idx);
 
-        // check for off the map
-        if guard_direction == Direction::Up && guard_row == 0
-            || guard_direction == Direction::Right && guard_col == cols - 1
-            || guard_direction == Direction::Down && guard_row == rows - 1
-            || guard_direction == Direction::Left && guard_col == 0
-        {
-            next_move_off_map = true;
-        } else {
-            if guard_direction == Direction::Up {
-                if guard_map[guard_row - 1][guard_col] == '#' {
-                    guard_direction = Direction::Right;
+            let mut loop_detected = false;
+            let mut next_move_off_map = false;
+            let mut guard_direction = Direction::Up;
+            while next_move_off_map == false {
+                println!("guard_row:{} guard_col:{}", guard_row, guard_col);
+
+                // check for off the map
+                if guard_direction == Direction::Up && guard_row == 0
+                    || guard_direction == Direction::Right && guard_col == cols - 1
+                    || guard_direction == Direction::Down && guard_row == rows - 1
+                    || guard_direction == Direction::Left && guard_col == 0
+                {
+                    next_move_off_map = true;
                 } else {
-                    guard_map[guard_row][guard_col] = 'X';
-                    guard_row -= 1;
-                }
-            } else if guard_direction == Direction::Right {
-                if guard_map[guard_row][guard_col + 1] == '#' {
-                    guard_direction = Direction::Down;
-                } else {
-                    guard_map[guard_row][guard_col] = 'X';
-                    guard_col += 1;
-                }
-            } else if guard_direction == Direction::Down {
-                if guard_map[guard_row + 1][guard_col] == '#' {
-                    guard_direction = Direction::Left;
-                } else {
-                    guard_map[guard_row][guard_col] = 'X';
-                    guard_row += 1;
-                }
-            } else if guard_direction == Direction::Left {
-                if guard_map[guard_row][guard_col - 1] == '#' {
-                    guard_direction = Direction::Up;
-                } else {
-                    guard_map[guard_row][guard_col] = 'X';
-                    guard_col -= 1;
+                    if guard_direction == Direction::Up {
+                        if guard_map[guard_row][guard_col] == 'U' {
+                            loop_detected = true;
+                        } else if guard_map[guard_row - 1][guard_col] == '#' {
+                            guard_direction = Direction::Right;
+                        } else {
+                            guard_map[guard_row][guard_col] = 'U';
+                            guard_row -= 1;
+                        }
+                    } else if guard_direction == Direction::Right {
+                        if guard_map[guard_row][guard_col] == 'R' {
+                            loop_detected = true;
+                        } else if guard_map[guard_row][guard_col + 1] == '#' {
+                            guard_direction = Direction::Down;
+                        } else {
+                            guard_map[guard_row][guard_col] = 'R';
+                            guard_col += 1;
+                        }
+                    } else if guard_direction == Direction::Down {
+                        if guard_map[guard_row][guard_col] == 'D' {
+                            loop_detected = true;
+                        } else if guard_map[guard_row + 1][guard_col] == '#' {
+                            guard_direction = Direction::Left;
+                        } else {
+                            guard_map[guard_row][guard_col] = 'D';
+                            guard_row += 1;
+                        }
+                    } else if guard_direction == Direction::Left {
+                        if guard_map[guard_row][guard_col] == 'L' {
+                            loop_detected = true;
+                        } else if guard_map[guard_row][guard_col - 1] == '#' {
+                            guard_direction = Direction::Up;
+                        } else {
+                            guard_map[guard_row][guard_col] = 'L';
+                            guard_col -= 1;
+                        }
+                    }
+                    if loop_detected == true {
+                        loop_obstructions += 1;
+                        break;
+                    }
                 }
             }
         }
     }
+    println!("loop_obstructions:{}", loop_obstructions);
 }
 
 #[allow(dead_code)]
