@@ -18,6 +18,7 @@ fn main_day_07_part_01() {
     for line in f.lines() {
         let line = line.expect("Unable to read line");
         println!("{}", line);
+        let re = Regex::new(r"\d+").unwrap();
     }
 }
 
