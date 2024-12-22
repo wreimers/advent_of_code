@@ -16,7 +16,7 @@ fn main() {
 fn main_day_08_part_02() {
     let mut node_map: Vec<Vec<char>> = Vec::new();
     let mut nodes: HashMap<char, Vec<AntennaNode>> = HashMap::new();
-    let pathname = "./var/day_08_sample_input.txt";
+    let pathname = "./var/day_08_sample_test_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -55,16 +55,16 @@ fn main_day_08_part_02() {
             let row_distance = (comb[0].row as i32 - comb[1].row as i32).abs();
             let col_distance = (comb[0].col as i32 - comb[1].col as i32).abs();
             // Add the nodes as anodes
-            // let anode = AntennaAntinode {
-            //     row: comb[0].row as i32,
-            //     col: comb[0].col as i32,
-            // };
-            // anodes.insert(anode);
-            // let anode = AntennaAntinode {
-            //     row: comb[1].row as i32,
-            //     col: comb[1].col as i32,
-            // };
-            // anodes.insert(anode);
+            let anode = AntennaAntinode {
+                row: comb[0].row as i32,
+                col: comb[0].col as i32,
+            };
+            anodes.insert(anode);
+            let anode = AntennaAntinode {
+                row: comb[1].row as i32,
+                col: comb[1].col as i32,
+            };
+            anodes.insert(anode);
             if comb[0].row <= comb[1].row && comb[0].col <= comb[1].col {
                 // comb[0] is up and left
                 let mut current_row_distance = 0;
@@ -82,11 +82,21 @@ fn main_day_08_part_02() {
                         break;
                     }
                 }
-                let anode = AntennaAntinode {
-                    row: comb[1].row as i32 + row_distance,
-                    col: comb[1].col as i32 + col_distance,
-                };
-                anodes.insert(anode);
+                current_row_distance = 0;
+                current_col_distance = 0;
+                loop {
+                    current_row_distance += row_distance;
+                    current_col_distance += col_distance;
+                    let anode = AntennaAntinode {
+                        row: comb[1].row as i32 + current_row_distance,
+                        col: comb[1].col as i32 + current_col_distance,
+                    };
+                    if d08p02_node_in_bounds(&anode, &rows, &cols) {
+                        anodes.insert(anode);
+                    } else {
+                        break;
+                    }
+                }
             } else if comb[0].row >= comb[1].row && comb[0].col <= comb[1].col {
                 // comb[0] is down and left
                 let anode = AntennaAntinode {
