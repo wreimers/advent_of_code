@@ -2,7 +2,7 @@ use datafile::NumbersDataFile;
 use itertools::Itertools;
 use memoize::memoize;
 use regex::Regex;
-use std::collections::{HashSet, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -14,13 +14,122 @@ fn main() {
 }
 
 fn main_day_08_part_01() {
+    let mut node_map: Vec<Vec<char>> = Vec::new();
+    let mut nodes: HashMap<char, Vec<AntennaNode>> = HashMap::new();
     let pathname = "./var/day_08_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
         let line = line.expect("Unable to read line");
-        println!("{}", line);
+        // println!("{}", line);
+        let letters: Vec<char> = line.chars().collect();
+        // println!("{:?}", letters);
+        node_map.push(letters);
     }
+    let rows = node_map.len();
+    let cols = node_map[0].len();
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            let node_type = node_map[row_idx][col_idx];
+            if node_type == '.' {
+                continue;
+            }
+            let node = AntennaNode {
+                node_type: node_type,
+                row: row_idx,
+                col: col_idx,
+            };
+            if !nodes.contains_key(&node_type) {
+                nodes.insert(node_type, Vec::new());
+            }
+            nodes.get_mut(&node_type).unwrap().push(node);
+        }
+    }
+    // println!("{:?}", nodes);
+    let mut anodes: HashSet<AntennaANode> = HashSet::new();
+    for (_node_type, node_list) in nodes.into_iter() {
+        let combinations: HashSet<_> = node_list.into_iter().combinations(2).collect();
+        // println!("combinations:{:#?}", combinations);
+
+        for comb in combinations {
+            let row_distance = (comb[0].row as i32 - comb[1].row as i32).abs();
+            let col_distance = (comb[0].col as i32 - comb[1].col as i32).abs();
+            if comb[0].row <= comb[1].row && comb[0].col <= comb[1].col {
+                // comb[0] is up and left
+                let anode = AntennaANode {
+                    // node_type: node_type,
+                    row: comb[0].row as i32 - row_distance,
+                    col: comb[0].col as i32 - col_distance,
+                };
+                anodes.insert(anode);
+                let anode = AntennaANode {
+                    row: comb[1].row as i32 + row_distance,
+                    col: comb[1].col as i32 + col_distance,
+                };
+                anodes.insert(anode);
+            } else if comb[0].row >= comb[1].row && comb[0].col <= comb[1].col {
+                // comb[0] is down and left
+                let anode = AntennaANode {
+                    row: comb[0].row as i32 + row_distance,
+                    col: comb[0].col as i32 - col_distance,
+                };
+                anodes.insert(anode);
+                let anode = AntennaANode {
+                    row: comb[1].row as i32 - row_distance,
+                    col: comb[1].col as i32 + col_distance,
+                };
+                anodes.insert(anode);
+            } else if comb[0].row <= comb[1].row && comb[0].col >= comb[1].col {
+                // comb[0] is up and right
+                let anode = AntennaANode {
+                    row: comb[0].row as i32 - row_distance,
+                    col: comb[0].col as i32 + col_distance,
+                };
+                anodes.insert(anode);
+                let anode = AntennaANode {
+                    row: comb[1].row as i32 + row_distance,
+                    col: comb[1].col as i32 - col_distance,
+                };
+                anodes.insert(anode);
+            } else if comb[0].row >= comb[1].row && comb[0].col >= comb[1].col {
+                // comb[0] is down and right
+                let anode = AntennaANode {
+                    row: comb[0].row as i32 + row_distance,
+                    col: comb[0].col as i32 + col_distance,
+                };
+                anodes.insert(anode);
+                let anode = AntennaANode {
+                    row: comb[1].row as i32 - row_distance,
+                    col: comb[1].col as i32 - col_distance,
+                };
+                anodes.insert(anode);
+            }
+        }
+    }
+    // todo cull out of bounds anodes
+    let mut in_bounds_anodes: Vec<AntennaANode> = Vec::new();
+    for anode in anodes {
+        if anode.row >= 0 && anode.row < rows as i32 && anode.col >= 0 && anode.col < cols as i32 {
+            in_bounds_anodes.push(anode);
+        }
+    }
+    // println!("anodes:{:#?}", anodes);
+    // println!("anode_count:{}", anodes.len());
+    println!("in_bounds_anodes:{}", in_bounds_anodes.len());
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct AntennaNode {
+    node_type: char,
+    row: usize,
+    col: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct AntennaANode {
+    // node_type: char,
+    row: i32,
+    col: i32,
 }
 
 #[allow(dead_code)]
