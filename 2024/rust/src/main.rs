@@ -1,5 +1,6 @@
 use datafile::NumbersDataFile;
 use itertools::Itertools;
+use memoize::memoize;
 use regex::Regex;
 use std::collections::{HashSet, VecDeque};
 use std::fs::File;
@@ -13,7 +14,7 @@ fn main() {
 }
 
 fn main_day_07_part_02() {
-    let pathname = "./var/day_07_sample_input.txt";
+    let pathname = "./var/day_07_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     let mut possible_equations = 0;
@@ -24,19 +25,16 @@ fn main_day_07_part_02() {
         let re = Regex::new(r"\d+").unwrap();
         let captures: Vec<&str> = re.find_iter(line.as_str()).map(|x| x.as_str()).collect();
 
-        let mut operands: Vec<char> = Vec::new();
+        let mut operators: Vec<char> = Vec::new();
         for _ in 1..(captures.len() - 1) {
-            operands.push('+');
-            operands.push('*');
-            operands.push('|');
+            operators.push('+');
+            operators.push('*');
+            operators.push('|');
         }
-        println!("operands:{:?}", operands);
-        // let operands = vec!['+', '*', '+', '*'];
-        let combinations: HashSet<_> = operands
-            .into_iter()
-            .combinations(captures.len() - 2)
-            .collect();
-        println!("combinations:{:?}", combinations);
+        println!("operators:{:?}", operators);
+        let k = captures.len() - 2;
+        let combinations = d07p02_calculate_combinations(operators, k);
+        // println!("combinations:{:?}", combinations);
         let target_value: i64 = captures[0].parse().unwrap();
         for comb in combinations {
             println!("combination:{:?}", comb);
@@ -66,6 +64,12 @@ fn main_day_07_part_02() {
         }
     }
     println!("possible_equations:{} sum:{}", possible_equations, sum);
+}
+
+#[memoize]
+fn d07p02_calculate_combinations(operators: Vec<char>, k: usize) -> HashSet<Vec<char>> {
+    let combinations: HashSet<_> = operators.into_iter().combinations(k).collect();
+    combinations
 }
 
 #[allow(dead_code)]
