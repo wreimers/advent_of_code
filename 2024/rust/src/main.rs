@@ -10,9 +10,12 @@ mod datafile;
 mod day_01;
 
 fn main() {
-    main_day_08_part_02();
+    main_day_09_part_01();
 }
 
+fn main_day_09_part_01() {}
+
+#[allow(dead_code)]
 fn main_day_08_part_02() {
     let mut node_map: Vec<Vec<char>> = Vec::new();
     let mut nodes: HashMap<char, Vec<AntennaNode>> = HashMap::new();
