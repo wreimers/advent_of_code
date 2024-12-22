@@ -16,7 +16,7 @@ fn main() {
 fn main_day_08_part_02() {
     let mut node_map: Vec<Vec<char>> = Vec::new();
     let mut nodes: HashMap<char, Vec<AntennaNode>> = HashMap::new();
-    let pathname = "./var/day_08_sample_input.txt";
+    let pathname = "./var/day_08_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
