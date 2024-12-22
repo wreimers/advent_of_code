@@ -13,7 +13,15 @@ fn main() {
     main_day_08_part_01();
 }
 
-fn main_day_08_part_01() {}
+fn main_day_08_part_01() {
+    let pathname = "./var/day_08_sample_input.txt";
+    let f = File::open(pathname).expect("Unable to open file");
+    let f = BufReader::new(f);
+    for line in f.lines() {
+        let line = line.expect("Unable to read line");
+        println!("{}", line);
+    }
+}
 
 #[allow(dead_code)]
 fn main_day_07_part_02() {
