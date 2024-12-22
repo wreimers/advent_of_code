@@ -10,9 +10,12 @@ mod datafile;
 mod day_01;
 
 fn main() {
-    main_day_07_part_02();
+    main_day_08_part_01();
 }
 
+fn main_day_08_part_01() {}
+
+#[allow(dead_code)]
 fn main_day_07_part_02() {
     let pathname = "./var/day_07_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
