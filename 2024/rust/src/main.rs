@@ -131,16 +131,36 @@ fn main_day_08_part_02() {
                 }
             } else if comb[0].row <= comb[1].row && comb[0].col >= comb[1].col {
                 // comb[0] is up and right
-                let anode = AntennaAntinode {
-                    row: comb[0].row as i32 - row_distance,
-                    col: comb[0].col as i32 + col_distance,
-                };
-                anodes.insert(anode);
-                let anode = AntennaAntinode {
-                    row: comb[1].row as i32 + row_distance,
-                    col: comb[1].col as i32 - col_distance,
-                };
-                anodes.insert(anode);
+                let mut current_row_distance = 0;
+                let mut current_col_distance = 0;
+                loop {
+                    current_row_distance += row_distance;
+                    current_col_distance += col_distance;
+                    let anode = AntennaAntinode {
+                        row: comb[0].row as i32 - current_row_distance,
+                        col: comb[0].col as i32 + current_col_distance,
+                    };
+                    if d08p02_node_in_bounds(&anode, &rows, &cols) {
+                        anodes.insert(anode);
+                    } else {
+                        break;
+                    }
+                }
+                current_row_distance = 0;
+                current_col_distance = 0;
+                loop {
+                    current_row_distance += row_distance;
+                    current_col_distance += col_distance;
+                    let anode = AntennaAntinode {
+                        row: comb[1].row as i32 + current_row_distance,
+                        col: comb[1].col as i32 - current_col_distance,
+                    };
+                    if d08p02_node_in_bounds(&anode, &rows, &cols) {
+                        anodes.insert(anode);
+                    } else {
+                        break;
+                    }
+                }
             } else if comb[0].row >= comb[1].row && comb[0].col >= comb[1].col {
                 // comb[0] is down and right
                 let anode = AntennaAntinode {
