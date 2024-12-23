@@ -24,26 +24,41 @@ fn main_day_09_part_01() {
         letters = line.chars().collect();
         println!("{:?}", letters);
     }
-    let mut disk_map = String::from("");
+    let mut disk_blocks: VecDeque<DiskBlock> = VecDeque::new();
     for idx in 0..letters.len() {
-        let current_int: u32 = letters[idx].to_string().parse().unwrap();
-        println!("current_int:{}", current_int);
+        let block_count: i32 = letters[idx].to_string().parse().unwrap();
+        println!("block_count:{}", block_count);
         if idx % 2 == 0 {
             // even - file blocks
             println!("even idx:{}", idx);
-            for i in 0..current_int {
-                let push_char = char::from_digit((idx / 2) as u32, 10).unwrap();
-                println!("push:{}", push_char);
-                disk_map.push(push_char);
+            for i in 0..block_count {
+                let db = DiskBlock {
+                    is_space: false,
+                    file_id: Some((idx / 2) as i32),
+                };
+                println!("db:{:?}", db);
+                disk_blocks.push_back(db);
             }
         } else {
             // odd - space blocks
-            for i in 0..current_int {
-                disk_map.push('.');
+            println!("odd idx:{}", idx);
+            for i in 0..block_count {
+                let db = DiskBlock {
+                    is_space: true,
+                    file_id: None,
+                };
+                println!("db:{:?}", db);
+                disk_blocks.push_back(db);
             }
         }
     }
-    println!("{}", disk_map);
+    dbg!(disk_blocks);
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+struct DiskBlock {
+    is_space: bool,
+    file_id: Option<i32>,
 }
 
 #[allow(dead_code)]
