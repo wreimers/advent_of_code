@@ -14,15 +14,36 @@ fn main() {
 }
 
 fn main_day_09_part_01() {
+    let mut letters: Vec<char> = Vec::new();
     let pathname = "./var/day_09_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
         let line = line.expect("Unable to read line");
         println!("{}", line);
-        let letters: Vec<char> = line.chars().collect();
+        letters = line.chars().collect();
         println!("{:?}", letters);
     }
+    let mut disk_map = String::from("");
+    for idx in 0..letters.len() {
+        let current_int: u32 = letters[idx].to_string().parse().unwrap();
+        println!("current_int:{}", current_int);
+        if idx % 2 == 0 {
+            // even - file blocks
+            println!("even idx:{}", idx);
+            for i in 0..current_int {
+                let push_char = char::from_digit((idx / 2) as u32, 10).unwrap();
+                println!("push:{}", push_char);
+                disk_map.push(push_char);
+            }
+        } else {
+            // odd - space blocks
+            for i in 0..current_int {
+                disk_map.push('.');
+            }
+        }
+    }
+    println!("{}", disk_map);
 }
 
 #[allow(dead_code)]
