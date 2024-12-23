@@ -15,7 +15,7 @@ fn main() {
 
 fn main_day_09_part_01() {
     let mut letters: Vec<char> = Vec::new();
-    let pathname = "./var/day_09_sample_input.txt";
+    let pathname = "./var/day_09_sample_simple_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -27,10 +27,10 @@ fn main_day_09_part_01() {
     let mut disk_blocks: VecDeque<DiskBlock> = VecDeque::new();
     for idx in 0..letters.len() {
         let block_count: i32 = letters[idx].to_string().parse().unwrap();
-        println!("block_count:{}", block_count);
+        println!("block_count:{} idx:{}", block_count, idx);
         if idx % 2 == 0 {
             // even - file blocks
-            println!("even idx:{}", idx);
+            // println!("even idx:{}", idx);
             for i in 0..block_count {
                 let db = DiskBlock {
                     is_space: false,
@@ -41,7 +41,7 @@ fn main_day_09_part_01() {
             }
         } else {
             // odd - space blocks
-            println!("odd idx:{}", idx);
+            // println!("odd idx:{}", idx);
             for i in 0..block_count {
                 let db = DiskBlock {
                     is_space: true,
@@ -52,10 +52,29 @@ fn main_day_09_part_01() {
             }
         }
     }
-    dbg!(disk_blocks);
+    // dbg!(disk_blocks);
+    let mut spaceless_disk_blocks: VecDeque<DiskBlock> = disk_blocks
+        .clone()
+        .iter()
+        .map(|db| *db)
+        .filter(|db| db.is_space == false)
+        .collect();
+    dbg!(spaceless_disk_blocks);
+    let mut compressed_disk_blocks: VecDeque<DiskBlock> = VecDeque::new();
+    for db in disk_blocks {
+        match db.is_space {
+            false => {
+                compressed_disk_blocks.push_back(db);
+            }
+            true => {
+                let found_file_block = false;
+                while found_file_block == false {}
+            }
+        }
+    }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
 struct DiskBlock {
     is_space: bool,
     file_id: Option<i32>,
