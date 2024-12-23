@@ -13,7 +13,17 @@ fn main() {
     main_day_09_part_01();
 }
 
-fn main_day_09_part_01() {}
+fn main_day_09_part_01() {
+    let pathname = "./var/day_09_sample_input.txt";
+    let f = File::open(pathname).expect("Unable to open file");
+    let f = BufReader::new(f);
+    for line in f.lines() {
+        let line = line.expect("Unable to read line");
+        println!("{}", line);
+        let letters: Vec<char> = line.chars().collect();
+        println!("{:?}", letters);
+    }
+}
 
 #[allow(dead_code)]
 fn main_day_08_part_02() {
