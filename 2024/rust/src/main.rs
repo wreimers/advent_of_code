@@ -10,7 +10,85 @@ mod datafile;
 mod day_01;
 
 fn main() {
-    main_day_09_part_01();
+    main_day_09_part_02();
+}
+
+fn main_day_09_part_02() {
+    let mut letters: Vec<char> = Vec::new();
+    let pathname = "./var/day_09_input.txt";
+    let f = File::open(pathname).expect("Unable to open file");
+    let f = BufReader::new(f);
+    for line in f.lines() {
+        let line = line.expect("Unable to read line");
+        println!("{}", line);
+        letters = line.chars().collect();
+        println!("{:?}", letters);
+    }
+    let mut disk_blocks: VecDeque<DiskBlock> = VecDeque::new();
+    for idx in 0..letters.len() {
+        let block_count: i32 = letters[idx].to_string().parse().unwrap();
+        println!("block_count:{} idx:{}", block_count, idx);
+        if idx % 2 == 0 {
+            // even - file blocks
+            // println!("even idx:{}", idx);
+            for i in 0..block_count {
+                let db = DiskBlock {
+                    is_space: false,
+                    file_id: Some((idx / 2) as i32),
+                };
+                println!("db:{:?}", db);
+                disk_blocks.push_back(db);
+            }
+        } else {
+            // odd - space blocks
+            // println!("odd idx:{}", idx);
+            for i in 0..block_count {
+                let db = DiskBlock {
+                    is_space: true,
+                    file_id: None,
+                };
+                println!("db:{:?}", db);
+                disk_blocks.push_back(db);
+            }
+        }
+    }
+    dbg!(&disk_blocks);
+    let mut file_block_indices: Vec<usize> = Vec::new();
+    for idx in 0..disk_blocks.len() {
+        if disk_blocks[idx].is_space == false {
+            file_block_indices.push(idx);
+        }
+    }
+    dbg!(&file_block_indices);
+    for idx in 0..disk_blocks.len() {
+        if disk_blocks[idx].is_space == false {
+            continue;
+        } else {
+            if file_block_indices.len() == 0 {
+                break;
+            }
+            println!("Found space at idx:{}", &idx);
+            let file_block_idx = file_block_indices.pop().unwrap();
+            if (idx > file_block_idx) {
+                println!("hit boundary");
+                break;
+            }
+            println!("Swapping with file_block_idx:{}", &file_block_idx);
+            disk_blocks[idx] = disk_blocks[file_block_idx];
+            disk_blocks[file_block_idx] = DiskBlock {
+                is_space: true,
+                file_id: None,
+            };
+        }
+    }
+    dbg!(&disk_blocks);
+    let mut checksum: i64 = 0;
+    for idx in 0..disk_blocks.len() {
+        if disk_blocks[idx].is_space == false {
+            checksum += idx as i64 * disk_blocks[idx].file_id.unwrap() as i64;
+        }
+    }
+    dbg!(&checksum);
 }
 
 fn main_day_09_part_01() {
