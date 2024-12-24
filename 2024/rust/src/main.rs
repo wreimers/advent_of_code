@@ -15,7 +15,7 @@ fn main() {
 
 fn main_day_09_part_01() {
     let mut letters: Vec<char> = Vec::new();
-    let pathname = "./var/day_09_sample_input.txt";
+    let pathname = "./var/day_09_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -82,10 +82,10 @@ fn main_day_09_part_01() {
         }
     }
     dbg!(&disk_blocks);
-    let mut checksum = 0;
+    let mut checksum: i64 = 0;
     for idx in 0..disk_blocks.len() {
         if disk_blocks[idx].is_space == false {
-            checksum += idx as i32 * disk_blocks[idx].file_id.unwrap();
+            checksum += idx as i64 * disk_blocks[idx].file_id.unwrap() as i64;
         }
     }
     dbg!(&checksum);
