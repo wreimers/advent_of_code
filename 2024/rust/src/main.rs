@@ -15,7 +15,7 @@ fn main() {
 
 fn main_day_09_part_01() {
     let mut letters: Vec<char> = Vec::new();
-    let pathname = "./var/day_09_sample_simple_input.txt";
+    let pathname = "./var/day_09_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -52,26 +52,43 @@ fn main_day_09_part_01() {
             }
         }
     }
-    // dbg!(disk_blocks);
-    let mut spaceless_disk_blocks: VecDeque<DiskBlock> = disk_blocks
-        .clone()
-        .iter()
-        .map(|db| *db)
-        .filter(|db| db.is_space == false)
-        .collect();
-    dbg!(spaceless_disk_blocks);
-    let mut compressed_disk_blocks: VecDeque<DiskBlock> = VecDeque::new();
-    for db in disk_blocks {
-        match db.is_space {
-            false => {
-                compressed_disk_blocks.push_back(db);
-            }
-            true => {
-                let found_file_block = false;
-                while found_file_block == false {}
-            }
+    dbg!(&disk_blocks);
+    let mut file_block_indices: Vec<usize> = Vec::new();
+    for idx in 0..disk_blocks.len() {
+        if disk_blocks[idx].is_space == false {
+            file_block_indices.push(idx);
         }
     }
+    dbg!(&file_block_indices);
+    for idx in 0..disk_blocks.len() {
+        if disk_blocks[idx].is_space == false {
+            continue;
+        } else {
+            if file_block_indices.len() == 0 {
+                break;
+            }
+            println!("Found space at idx:{}", &idx);
+            let file_block_idx = file_block_indices.pop().unwrap();
+            if (idx > file_block_idx) {
+                println!("hit boundary");
+                break;
+            }
+            println!("Swapping with file_block_idx:{}", &file_block_idx);
+            disk_blocks[idx] = disk_blocks[file_block_idx];
+            disk_blocks[file_block_idx] = DiskBlock {
+                is_space: true,
+                file_id: None,
+            };
+        }
+    }
+    dbg!(&disk_blocks);
+    let mut checksum = 0;
+    for idx in 0..disk_blocks.len() {
+        if disk_blocks[idx].is_space == false {
+            checksum += idx as i32 * disk_blocks[idx].file_id.unwrap();
+        }
+    }
+    dbg!(&checksum);
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
