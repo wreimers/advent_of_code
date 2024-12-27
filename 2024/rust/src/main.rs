@@ -31,7 +31,7 @@ fn main_day_09_part_02() {
         if idx % 2 == 0 {
             // even - file blocks
             // println!("even idx:{}", idx);
-            for i in 0..block_count {
+            for _i in 0..block_count {
                 let db = DiskBlock {
                     is_space: false,
                     file_id: Some((idx / 2) as i32),
@@ -42,7 +42,7 @@ fn main_day_09_part_02() {
         } else {
             // odd - space blocks
             // println!("odd idx:{}", idx);
-            for i in 0..block_count {
+            for _i in 0..block_count {
                 let db = DiskBlock {
                     is_space: true,
                     file_id: None,
@@ -69,7 +69,7 @@ fn main_day_09_part_02() {
             }
             println!("Found space at idx:{}", &idx);
             let file_block_idx = file_block_indices.pop().unwrap();
-            if (idx > file_block_idx) {
+            if idx > file_block_idx {
                 println!("hit boundary");
                 break;
             }
@@ -91,6 +91,7 @@ fn main_day_09_part_02() {
     dbg!(&checksum);
 }
 
+#[allow(dead_code)]
 fn main_day_09_part_01() {
     let mut letters: Vec<char> = Vec::new();
     let pathname = "./var/day_09_input.txt";
@@ -109,7 +110,7 @@ fn main_day_09_part_01() {
         if idx % 2 == 0 {
             // even - file blocks
             // println!("even idx:{}", idx);
-            for i in 0..block_count {
+            for _i in 0..block_count {
                 let db = DiskBlock {
                     is_space: false,
                     file_id: Some((idx / 2) as i32),
@@ -120,7 +121,7 @@ fn main_day_09_part_01() {
         } else {
             // odd - space blocks
             // println!("odd idx:{}", idx);
-            for i in 0..block_count {
+            for _i in 0..block_count {
                 let db = DiskBlock {
                     is_space: true,
                     file_id: None,
@@ -147,7 +148,7 @@ fn main_day_09_part_01() {
             }
             println!("Found space at idx:{}", &idx);
             let file_block_idx = file_block_indices.pop().unwrap();
-            if (idx > file_block_idx) {
+            if idx > file_block_idx {
                 println!("hit boundary");
                 break;
             }
