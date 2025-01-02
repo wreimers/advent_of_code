@@ -10,7 +10,9 @@ mod datafile;
 mod day_01;
 
 fn main() {
+    let start = std::time::Instant::now();
     main_day_09_part_02();
+    println!("{:?}", start.elapsed());
 }
 
 fn main_day_09_part_02() {
@@ -24,19 +26,23 @@ fn main_day_09_part_02() {
         letters = line.chars().collect();
         // println!("{:?}", letters);
     }
-    // let mut disk_files: VecDeque<DiskFile> = VecDeque::new();
+
+    let mut disk_files: VecDeque<DiskFile> = VecDeque::new();
+    let mut disk_spaces: VecDeque<DiskFile> = VecDeque::new();
     let mut disk_blocks: VecDeque<DiskBlock> = VecDeque::new();
+    let mut current_idx: i32 = 0;
     for idx in 0..letters.len() {
         let block_count: i32 = letters[idx].to_string().parse().unwrap();
         // println!("block_count:{} idx:{}", block_count, idx);
         if idx % 2 == 0 {
             // even - file blocks
             // println!("even idx:{}", idx);
-            // disk_files.push_back(DiskFile {
-            //     is_space: false,
-            //     size: block_count,
-            //     file_id: Some((idx / 2) as i32),
-            // });
+            disk_files.push_back(DiskFile {
+                index: current_idx as i32,
+                is_space: false,
+                size: block_count,
+                file_id: Some((idx / 2) as i32),
+            });
             for _i in 0..block_count {
                 let db = DiskBlock {
                     is_space: false,
@@ -48,11 +54,12 @@ fn main_day_09_part_02() {
         } else {
             // odd - space blocks
             // println!("odd idx:{}", idx);
-            // disk_files.push_back(DiskFile {
-            //     is_space: true,
-            //     size: block_count,
-            //     file_id: None,
-            // });
+            disk_spaces.push_back(DiskFile {
+                index: current_idx as i32,
+                is_space: true,
+                size: block_count,
+                file_id: None,
+            });
             for _i in 0..block_count {
                 let db = DiskBlock {
                     is_space: true,
@@ -62,51 +69,79 @@ fn main_day_09_part_02() {
                 disk_blocks.push_back(db);
             }
         }
+        current_idx += block_count;
     }
     // dbg!(&disk_blocks);
     // dbg!(&disk_files);
+    dbg!(&disk_spaces);
 
-    // let mut compressed_disk_files: VecDeque<DiskFile> = disk_files.clone();
-    // for i in (0..disk_files.len()).rev() {
-    //     let disk_file = disk_files[i];
-    //     if disk_file.is_space == false {
-    //         for j in 0..compressed_disk_files.len() {
-    //             let c_disk_file = compressed_disk_files[j];
-    //             if c_disk_file.is_space == true && c_disk_file.size >= disk_file.size {}
-    //         }
+    for i in (0..disk_files.len()).rev() {
+        let disk_file = disk_files[i];
+        println!("disk_file:{:?}", &disk_file);
+        if disk_file.is_space == false {
+            for j in 0..disk_spaces.len() {
+                let disk_space = disk_spaces[j];
+                if disk_space.size >= disk_file.size {
+                    println!("disk_space:{:?}", &disk_space);
+                    // move the file to the space
+                    for k in 0..disk_file.size {
+                        println!(
+                            "moving block {} to block {}",
+                            disk_file.index + k,
+                            disk_space.index + k,
+                        );
+                        disk_blocks[(disk_space.index + k) as usize] =
+                            disk_blocks[(disk_file.index + k) as usize];
+                        disk_blocks[(disk_file.index + k) as usize] = DiskBlock {
+                            is_space: true,
+                            file_id: None,
+                        }
+                    }
+                    // recalculate disk_spaces
+                    disk_spaces[j] = DiskFile {
+                        index: disk_spaces[j].index + disk_file.size,
+                        is_space: true,
+                        size: disk_space.size - disk_file.size,
+                        file_id: None,
+                    };
+                    println!("new disk_space:{:?}", &disk_spaces[j]);
+                    break;
+                }
+            }
+        }
+    }
+    // dbg!(&disk_blocks);
+
+    // let mut file_block_indices: Vec<usize> = Vec::new();
+    // for idx in 0..disk_blocks.len() {
+    //     if disk_blocks[idx].is_space == false {
+    //         file_block_indices.push(idx);
     //     }
     // }
-    // dbg!(&compressed_disk_files);
+    // dbg!(&file_block_indices);
 
-    let mut file_block_indices: Vec<usize> = Vec::new();
-    for idx in 0..disk_blocks.len() {
-        if disk_blocks[idx].is_space == false {
-            file_block_indices.push(idx);
-        }
-    }
-    dbg!(&file_block_indices);
-    for idx in 0..disk_blocks.len() {
-        if disk_blocks[idx].is_space == false {
-            continue;
-        } else {
-            if file_block_indices.len() == 0 {
-                break;
-            }
-            println!("Found space at idx:{}", &idx);
-            let file_block_idx = file_block_indices.pop().unwrap();
-            if idx > file_block_idx {
-                println!("hit boundary");
-                break;
-            }
-            println!("Swapping with file_block_idx:{}", &file_block_idx);
-            disk_blocks[idx] = disk_blocks[file_block_idx];
-            disk_blocks[file_block_idx] = DiskBlock {
-                is_space: true,
-                file_id: None,
-            };
-        }
-    }
-    dbg!(&disk_blocks);
+    // for idx in 0..disk_blocks.len() {
+    //     if disk_blocks[idx].is_space == false {
+    //         continue;
+    //     } else {
+    //         if file_block_indices.len() == 0 {
+    //             break;
+    //         }
+    //         // println!("Found space at idx:{}", &idx);
+    //         let file_block_idx = file_block_indices.pop().unwrap();
+    //         if idx > file_block_idx {
+    //             // println!("hit boundary");
+    //             break;
+    //         }
+    //         // println!("Swapping with file_block_idx:{}", &file_block_idx);
+    //         disk_blocks[idx] = disk_blocks[file_block_idx];
+    //         disk_blocks[file_block_idx] = DiskBlock {
+    //             is_space: true,
+    //             file_id: None,
+    //         };
+    //     }
+    // }
+    // dbg!(&disk_blocks);
 
     let mut checksum: i64 = 0;
     for idx in 0..disk_blocks.len() {
@@ -117,12 +152,13 @@ fn main_day_09_part_02() {
     dbg!(&checksum);
 }
 
-// #[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
-// struct DiskFile {
-//     is_space: bool,
-//     size: i32,
-//     file_id: Option<i32>,
-// }
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
+struct DiskFile {
+    index: i32,
+    is_space: bool,
+    size: i32,
+    file_id: Option<i32>,
+}
 
 #[allow(dead_code)]
 fn main_day_09_part_01() {
