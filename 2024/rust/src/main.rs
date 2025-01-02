@@ -11,10 +11,13 @@ mod day_01;
 
 fn main() {
     let start = std::time::Instant::now();
-    main_day_09_part_02();
+    main_day_10_part_01();
     println!("{:?}", start.elapsed());
 }
 
+fn main_day_10_part_01() {}
+
+#[allow(dead_code)]
 fn main_day_09_part_02() {
     let mut letters: Vec<char> = Vec::new();
     let pathname = "./var/day_09_input.txt";
