@@ -5,6 +5,7 @@ use regex::Regex;
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::result;
 
 mod datafile;
 mod day_01;
@@ -28,6 +29,69 @@ fn main_day_10_part_01() {
         trail_map.push(letters);
     }
     // dbg!(&trail_map);
+
+    let rows = trail_map.len();
+    let cols = trail_map[0].len();
+    let mut score = 0;
+    let mut paths: Vec<(usize, usize, char)> = Vec::new();
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            let result = &mut d10p01_look_around(&trail_map, &row_idx, &col_idx);
+            for i in 0..result.len() {
+                let cha = result[i].2;
+                if cha == '9' {
+                    score += 1;
+                }
+            }
+        }
+    }
+    dbg!(&score);
+}
+
+fn d10p01_look_around(
+    trail_map: &Vec<Vec<char>>,
+    row_idx: &usize,
+    col_idx: &usize,
+) -> Vec<(usize, usize, char)> {
+    let mut result: Vec<(usize, usize, char)> = Vec::new();
+    let rows = trail_map.len();
+    let cols = trail_map[0].len();
+    let center = trail_map[*row_idx][*col_idx];
+    let mut target = ' ';
+    if center == '0' {
+        target = '1';
+    } else if center == '1' {
+        target = '2';
+    } else if center == '2' {
+        target = '3';
+    } else if center == '3' {
+        target = '4';
+    } else if center == '4' {
+        target = '5';
+    } else if center == '5' {
+        target = '6';
+    } else if center == '6' {
+        target = '7';
+    } else if center == '7' {
+        target = '8';
+    } else if center == '8' {
+        target = '9';
+    }
+    if *row_idx >= 1 && *row_idx < rows - 1 {
+        // look up
+        if trail_map[*row_idx - 1][*col_idx] == target {
+            result.push((*row_idx - 1, *col_idx, target));
+        }
+        // look down
+        if trail_map[*row_idx + 1][*col_idx] == target {
+            result.push((*row_idx + 1, *col_idx, target));
+        }
+    }
+    if *col_idx >= 1 && *col_idx < cols - 1 {
+        // look right
+        // look left
+    }
+    result
 }
 
 #[allow(dead_code)]
