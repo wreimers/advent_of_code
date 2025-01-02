@@ -17,7 +17,7 @@ fn main() {
 
 fn main_day_09_part_02() {
     let mut letters: Vec<char> = Vec::new();
-    let pathname = "./var/day_09_sample_input.txt";
+    let pathname = "./var/day_09_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -73,23 +73,26 @@ fn main_day_09_part_02() {
     }
     // dbg!(&disk_blocks);
     // dbg!(&disk_files);
-    dbg!(&disk_spaces);
+    // dbg!(&disk_spaces);
 
-    for i in (0..disk_files.len()).rev() {
+    for i in (1..disk_files.len()).rev() {
         let disk_file = disk_files[i];
-        println!("disk_file:{:?}", &disk_file);
+        // println!("disk_file:{:?}", &disk_file);
         if disk_file.is_space == false {
             for j in 0..disk_spaces.len() {
                 let disk_space = disk_spaces[j];
+                if disk_space.index >= disk_file.index {
+                    break;
+                }
                 if disk_space.size >= disk_file.size {
-                    println!("disk_space:{:?}", &disk_space);
+                    // println!("disk_space:{:?}", &disk_space);
                     // move the file to the space
                     for k in 0..disk_file.size {
-                        println!(
-                            "moving block {} to block {}",
-                            disk_file.index + k,
-                            disk_space.index + k,
-                        );
+                        // println!(
+                        //     "moving block {} to block {}",
+                        //     disk_file.index + k,
+                        //     disk_space.index + k,
+                        // );
                         disk_blocks[(disk_space.index + k) as usize] =
                             disk_blocks[(disk_file.index + k) as usize];
                         disk_blocks[(disk_file.index + k) as usize] = DiskBlock {
@@ -104,43 +107,12 @@ fn main_day_09_part_02() {
                         size: disk_space.size - disk_file.size,
                         file_id: None,
                     };
-                    println!("new disk_space:{:?}", &disk_spaces[j]);
+                    // println!("new disk_space:{:?}", &disk_spaces[j]);
                     break;
                 }
             }
         }
     }
-    // dbg!(&disk_blocks);
-
-    // let mut file_block_indices: Vec<usize> = Vec::new();
-    // for idx in 0..disk_blocks.len() {
-    //     if disk_blocks[idx].is_space == false {
-    //         file_block_indices.push(idx);
-    //     }
-    // }
-    // dbg!(&file_block_indices);
-
-    // for idx in 0..disk_blocks.len() {
-    //     if disk_blocks[idx].is_space == false {
-    //         continue;
-    //     } else {
-    //         if file_block_indices.len() == 0 {
-    //             break;
-    //         }
-    //         // println!("Found space at idx:{}", &idx);
-    //         let file_block_idx = file_block_indices.pop().unwrap();
-    //         if idx > file_block_idx {
-    //             // println!("hit boundary");
-    //             break;
-    //         }
-    //         // println!("Swapping with file_block_idx:{}", &file_block_idx);
-    //         disk_blocks[idx] = disk_blocks[file_block_idx];
-    //         disk_blocks[file_block_idx] = DiskBlock {
-    //             is_space: true,
-    //             file_id: None,
-    //         };
-    //     }
-    // }
     // dbg!(&disk_blocks);
 
     let mut checksum: i64 = 0;
