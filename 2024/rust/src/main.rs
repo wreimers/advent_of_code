@@ -15,7 +15,20 @@ fn main() {
     println!("{:?}", start.elapsed());
 }
 
-fn main_day_10_part_01() {}
+fn main_day_10_part_01() {
+    let mut trail_map: Vec<Vec<char>> = Vec::new();
+    let pathname = "./var/day_10_sample_01_input.txt";
+    let f = File::open(pathname).expect("Unable to open file");
+    let f = BufReader::new(f);
+    for line in f.lines() {
+        let line = line.expect("Unable to read line");
+        // println!("{}", line);
+        let letters: Vec<char> = line.chars().collect();
+        // println!("{:?}", letters);
+        trail_map.push(letters);
+    }
+    // dbg!(&trail_map);
+}
 
 #[allow(dead_code)]
 fn main_day_09_part_02() {
