@@ -5,7 +5,6 @@ use regex::Regex;
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
-use std::result;
 
 mod datafile;
 mod day_01;
@@ -18,7 +17,7 @@ fn main() {
 
 fn main_day_10_part_01() {
     let mut trail_map: Vec<Vec<char>> = Vec::new();
-    let pathname = "./var/day_10_sample_01_input.txt";
+    let pathname = "./var/day_10_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -32,31 +31,70 @@ fn main_day_10_part_01() {
 
     let rows = trail_map.len();
     let cols = trail_map[0].len();
-    let mut score = 0;
-    let mut paths: Vec<(usize, usize, char)> = Vec::new();
+
+    let mut trailheads: Vec<TrailPoint> = Vec::new();
+    // let mut trailends: Vec<TrailPoint> = Vec::new();
     for row_idx in 0..rows {
         for col_idx in 0..cols {
-            let result = &mut d10p01_look_around(&trail_map, &row_idx, &col_idx);
-            for i in 0..result.len() {
-                let cha = result[i].2;
-                if cha == '9' {
-                    score += 1;
-                }
+            let point_char = trail_map[row_idx][col_idx];
+            if point_char == '0' {
+                trailheads.push(TrailPoint {
+                    point_char: point_char,
+                    row_idx: row_idx,
+                    col_idx: col_idx,
+                });
             }
+            // else if point_char == '9' {
+            //     trailends.push(TrailPoint {
+            //         point_char: point_char,
+            //         row_idx: row_idx,
+            //         col_idx: col_idx,
+            //     });
+            // }
         }
     }
-    dbg!(&score);
+    // dbg!(&trailheads);
+    // dbg!(&trailends);
+
+    let mut paths: Vec<TrailPoint> = Vec::new();
+    let mut total_score = 0;
+    for i in 0..trailheads.len() {
+        let mut scores: HashSet<TrailPoint> = HashSet::new();
+        let trail_point = trailheads[i];
+        paths.push(trail_point);
+        loop {
+            let curr_point = paths.pop().unwrap();
+            let mut result = d10p01_look_around(&trail_map, &curr_point);
+            // dbg!(&result);
+            paths.append(&mut result);
+            for j in 0..paths.len() {
+                let j_point = paths[j];
+                if j_point.point_char == '9' {
+                    scores.insert(j_point);
+                }
+            }
+            if paths.is_empty() {
+                break;
+            }
+        }
+        // dbg!(&scores);
+        total_score += scores.len();
+    }
+    dbg!(&total_score);
 }
 
-fn d10p01_look_around(
-    trail_map: &Vec<Vec<char>>,
-    row_idx: &usize,
-    col_idx: &usize,
-) -> Vec<(usize, usize, char)> {
-    let mut result: Vec<(usize, usize, char)> = Vec::new();
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Copy)]
+struct TrailPoint {
+    point_char: char,
+    row_idx: usize,
+    col_idx: usize,
+}
+
+fn d10p01_look_around(trail_map: &Vec<Vec<char>>, trail_point: &TrailPoint) -> Vec<TrailPoint> {
+    let mut result: Vec<TrailPoint> = Vec::new();
     let rows = trail_map.len();
     let cols = trail_map[0].len();
-    let center = trail_map[*row_idx][*col_idx];
+    let center = trail_map[trail_point.row_idx][trail_point.col_idx];
     let mut target = ' ';
     if center == '0' {
         target = '1';
@@ -77,19 +115,45 @@ fn d10p01_look_around(
     } else if center == '8' {
         target = '9';
     }
-    if *row_idx >= 1 && *row_idx < rows - 1 {
+    if trail_point.row_idx >= 1 {
         // look up
-        if trail_map[*row_idx - 1][*col_idx] == target {
-            result.push((*row_idx - 1, *col_idx, target));
-        }
-        // look down
-        if trail_map[*row_idx + 1][*col_idx] == target {
-            result.push((*row_idx + 1, *col_idx, target));
+        if trail_map[trail_point.row_idx - 1][trail_point.col_idx] == target {
+            result.push(TrailPoint {
+                point_char: target,
+                row_idx: trail_point.row_idx - 1,
+                col_idx: trail_point.col_idx,
+            });
         }
     }
-    if *col_idx >= 1 && *col_idx < cols - 1 {
-        // look right
+    if trail_point.row_idx < rows - 1 {
+        // look down
+        if trail_map[trail_point.row_idx + 1][trail_point.col_idx] == target {
+            result.push(TrailPoint {
+                point_char: target,
+                row_idx: trail_point.row_idx + 1,
+                col_idx: trail_point.col_idx,
+            });
+        }
+    }
+    if trail_point.col_idx >= 1 {
         // look left
+        if trail_map[trail_point.row_idx][trail_point.col_idx - 1] == target {
+            result.push(TrailPoint {
+                point_char: target,
+                row_idx: trail_point.row_idx,
+                col_idx: trail_point.col_idx - 1,
+            });
+        }
+    }
+    if trail_point.col_idx < cols - 1 {
+        // look right
+        if trail_map[trail_point.row_idx][trail_point.col_idx + 1] == target {
+            result.push(TrailPoint {
+                point_char: target,
+                row_idx: trail_point.row_idx,
+                col_idx: trail_point.col_idx + 1,
+            });
+        }
     }
     result
 }
