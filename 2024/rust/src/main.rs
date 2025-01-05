@@ -50,7 +50,7 @@ fn main_day_10_part_02() {
     let mut paths: Vec<TrailPoint> = Vec::new();
     let mut total_rating = 0;
     for i in 0..trailheads.len() {
-        let mut ratings: HashSet<TrailPoint> = HashSet::new();
+        let mut ratings: Vec<TrailPoint> = Vec::new();
         let trail_point = trailheads[i];
         paths.push(trail_point);
         loop {
@@ -61,7 +61,7 @@ fn main_day_10_part_02() {
             for j in 0..paths.len() {
                 let j_point = paths[j];
                 if j_point.point_char == '9' {
-                    ratings.insert(j_point);
+                    ratings.push(j_point);
                 }
             }
             if paths.is_empty() {
