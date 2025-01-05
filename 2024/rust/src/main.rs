@@ -17,7 +17,7 @@ fn main() {
 
 fn main_day_10_part_02() {
     let mut trail_map: Vec<Vec<char>> = Vec::new();
-    let pathname = "./var/day_10_sample_05_input.txt";
+    let pathname = "./var/day_10_sample_06_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -51,8 +51,7 @@ fn main_day_10_part_02() {
     let mut total_rating = 0;
     for i in 0..trailheads.len() {
         let mut ratings: Vec<TrailPoint> = Vec::new();
-        let trail_point = trailheads[i];
-        paths.push(trail_point);
+        paths.push(trailheads[i]);
         loop {
             let curr_point = paths.pop().unwrap();
             let mut result = d10p01_look_around(&trail_map, &curr_point);
@@ -68,7 +67,7 @@ fn main_day_10_part_02() {
                 break;
             }
         }
-        // dbg!(&ratings);
+        dbg!(&ratings);
         total_rating += ratings.len();
     }
     dbg!(&total_rating);
