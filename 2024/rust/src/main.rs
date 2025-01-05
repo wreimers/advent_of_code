@@ -17,7 +17,7 @@ fn main() {
 
 fn main_day_10_part_02() {
     let mut trail_map: Vec<Vec<char>> = Vec::new();
-    let pathname = "./var/day_10_sample_06_input.txt";
+    let pathname = "./var/day_10_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -57,17 +57,23 @@ fn main_day_10_part_02() {
             let mut result = d10p01_look_around(&trail_map, &curr_point);
             // dbg!(&result);
             paths.append(&mut result);
+            let mut indicies: Vec<usize> = Vec::new();
             for j in 0..paths.len() {
                 let j_point = paths[j];
                 if j_point.point_char == '9' {
+                    // println!("PUSHING {:?}", &j_point);
                     ratings.push(j_point);
+                    indicies.push(j);
                 }
+            }
+            for j in indicies.iter().rev() {
+                paths.remove(*j);
             }
             if paths.is_empty() {
                 break;
             }
         }
-        dbg!(&ratings);
+        // dbg!(&ratings);
         total_rating += ratings.len();
     }
     dbg!(&total_rating);
@@ -150,6 +156,7 @@ struct TrailPoint {
 }
 
 fn d10p01_look_around(trail_map: &Vec<Vec<char>>, trail_point: &TrailPoint) -> Vec<TrailPoint> {
+    // println!("Checking {:?}", trail_point);
     let mut result: Vec<TrailPoint> = Vec::new();
     let rows = trail_map.len();
     let cols = trail_map[0].len();
@@ -214,6 +221,7 @@ fn d10p01_look_around(trail_map: &Vec<Vec<char>>, trail_point: &TrailPoint) -> V
             });
         }
     }
+    // dbg!(&result);
     result
 }
 
