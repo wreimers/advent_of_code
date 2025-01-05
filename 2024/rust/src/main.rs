@@ -15,7 +15,64 @@ fn main() {
     println!("{:?}", start.elapsed());
 }
 
-fn main_day_10_part_02() {}
+fn main_day_10_part_02() {
+    let mut trail_map: Vec<Vec<char>> = Vec::new();
+    let pathname = "./var/day_10_input.txt";
+    let f = File::open(pathname).expect("Unable to open file");
+    let f = BufReader::new(f);
+    for line in f.lines() {
+        let line = line.expect("Unable to read line");
+        // println!("{}", line);
+        let letters: Vec<char> = line.chars().collect();
+        // println!("{:?}", letters);
+        trail_map.push(letters);
+    }
+    // dbg!(&trail_map);
+
+    let rows = trail_map.len();
+    let cols = trail_map[0].len();
+
+    let mut trailheads: Vec<TrailPoint> = Vec::new();
+    for row_idx in 0..rows {
+        for col_idx in 0..cols {
+            let point_char = trail_map[row_idx][col_idx];
+            if point_char == '0' {
+                trailheads.push(TrailPoint {
+                    point_char: point_char,
+                    row_idx: row_idx,
+                    col_idx: col_idx,
+                });
+            }
+        }
+    }
+    // dbg!(&trailheads);
+
+    let mut paths: Vec<TrailPoint> = Vec::new();
+    let mut total_rating = 0;
+    for i in 0..trailheads.len() {
+        let mut scores: HashSet<TrailPoint> = HashSet::new();
+        let trail_point = trailheads[i];
+        paths.push(trail_point);
+        loop {
+            let curr_point = paths.pop().unwrap();
+            let mut result = d10p01_look_around(&trail_map, &curr_point);
+            // dbg!(&result);
+            paths.append(&mut result);
+            for j in 0..paths.len() {
+                let j_point = paths[j];
+                if j_point.point_char == '9' {
+                    scores.insert(j_point);
+                }
+            }
+            if paths.is_empty() {
+                break;
+            }
+        }
+        // dbg!(&scores);
+        total_rating += scores.len();
+    }
+    dbg!(&total_rating);
+}
 
 #[allow(dead_code)]
 fn main_day_10_part_01() {
