@@ -35,8 +35,10 @@ fn main_day_11_part_01() {
     }
     // dbg!(&stones);
 
-    let blinks: i32 = 25;
-    for _i in 0..blinks {
+    let blinks: i32 = 75;
+    for i in 0..blinks {
+        println!("blink:{}", i);
+        dbg!(&stones.len());
         let mut newstones: VecDeque<PlutoStone> = VecDeque::new();
         while !stones.is_empty() {
             let stone = stones.pop_front().unwrap();
@@ -64,7 +66,7 @@ fn main_day_11_part_01() {
                 });
             }
         }
-        stones = newstones.clone();
+        stones = newstones;
     }
     // dbg!(&stones);
     dbg!(&stones.len());
