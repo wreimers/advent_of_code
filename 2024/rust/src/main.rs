@@ -16,7 +16,8 @@ fn main() {
 }
 
 fn main_day_11_part_01() {
-    let mut stones: VecDeque<PlutoStone> = VecDeque::new();
+    // let mut stones: VecDeque<PlutoStone> = VecDeque::new();
+    let mut stones: HashMap<i64, i64> = HashMap::new();
     let pathname = "./var/day_11_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
@@ -27,10 +28,11 @@ fn main_day_11_part_01() {
         let captures: Vec<&str> = re.find_iter(line.as_str()).map(|x| x.as_str()).collect();
         // dbg!(&captures);
         for cap in captures {
-            stones.push_back(PlutoStone {
-                num_str: cap.to_string(),
-                // value: cap.to_string().parse::<i64>().unwrap(),
-            })
+            *stones.entry(cap.parse::<i64>().unwrap()).or_default() += 1;
+            // stones.push_back(PlutoStone {
+            //     num_str: cap.to_string(),
+            //     // value: cap.to_string().parse::<i64>().unwrap(),
+            // });
         }
     }
     // dbg!(&stones);
