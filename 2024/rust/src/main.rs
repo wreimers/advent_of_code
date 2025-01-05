@@ -29,7 +29,7 @@ fn main_day_11_part_01() {
         for cap in captures {
             stones.push_back(PlutoStone {
                 num_str: cap.to_string(),
-                value: cap.to_string().parse::<i64>().unwrap(),
+                // value: cap.to_string().parse::<i64>().unwrap(),
             })
         }
     }
@@ -42,27 +42,28 @@ fn main_day_11_part_01() {
         let mut newstones: VecDeque<PlutoStone> = VecDeque::new();
         while !stones.is_empty() {
             let stone = stones.pop_front().unwrap();
-            if stone.value == 0 {
+            let value = stone.num_str.parse::<i64>().unwrap();
+            if value == 0 {
                 newstones.push_back(PlutoStone {
                     num_str: "1".to_string(),
-                    value: 1,
+                    // value: 1,
                 });
             } else if stone.num_str.chars().count() % 2 == 0 {
                 let split_index = stone.num_str.chars().count() / 2;
                 let (first, second) = stone.num_str.split_at(split_index);
                 newstones.push_back(PlutoStone {
                     num_str: first.to_string().parse::<i64>().unwrap().to_string(),
-                    value: first.to_string().parse::<i64>().unwrap(),
+                    // value: first.to_string().parse::<i64>().unwrap(),
                 });
                 newstones.push_back(PlutoStone {
                     num_str: second.to_string().parse::<i64>().unwrap().to_string(),
-                    value: second.to_string().parse::<i64>().unwrap(),
+                    // value: second.to_string().parse::<i64>().unwrap(),
                 });
             } else {
-                let new_value = stone.value * 2024;
+                let new_value = value * 2024;
                 newstones.push_back(PlutoStone {
                     num_str: new_value.to_string(),
-                    value: new_value,
+                    // value: new_value,
                 });
             }
         }
@@ -75,7 +76,7 @@ fn main_day_11_part_01() {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct PlutoStone {
     num_str: String,
-    value: i64,
+    // value: i64,
 }
 
 #[allow(dead_code)]
