@@ -11,14 +11,14 @@ mod day_01;
 
 fn main() {
     let start = std::time::Instant::now();
-    main_day_11_part_01();
+    main_day_11_part_02();
     println!("{:?}", start.elapsed());
 }
 
-fn main_day_11_part_01() {
+fn main_day_11_part_02() {
     // let mut stones: VecDeque<PlutoStone> = VecDeque::new();
     let mut stones: HashMap<i64, i64> = HashMap::new();
-    let pathname = "./var/day_11_input.txt";
+    let pathname = "./var/day_11_sample_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -35,12 +35,12 @@ fn main_day_11_part_01() {
             // });
         }
     }
-    // dbg!(&stones);
+    dbg!(&stones);
 
-    let blinks: i32 = 75;
+    let blinks: i32 = 25;
     for i in 0..blinks {
         println!("blink:{}", i);
-        dbg!(&stones.len());
+        // dbg!(&stones.len());
         let mut newstones: HashMap<i64, i64> = HashMap::new();
         // let mut newstones: VecDeque<PlutoStone> = VecDeque::new();
         let oldstones = stones.clone();
@@ -88,10 +88,12 @@ fn main_day_11_part_01() {
         //     }
         // }
         stones = newstones;
+        dbg!(&stones);
     }
     // dbg!(&stones);
     let mut total_stones: i64 = 0;
     for (key, value) in stones.into_iter() {
+        println!("{}:{}", &key, &value);
         total_stones += value;
     }
     dbg!(total_stones);
