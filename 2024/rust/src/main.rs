@@ -16,7 +16,6 @@ fn main() {
 }
 
 fn main_day_11_part_02() {
-    // let mut stones: VecDeque<PlutoStone> = VecDeque::new();
     let mut stones: HashMap<i64, i64> = HashMap::new();
     let pathname = "./var/day_11_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
@@ -29,10 +28,6 @@ fn main_day_11_part_02() {
         // dbg!(&captures);
         for cap in captures {
             *stones.entry(cap.parse::<i64>().unwrap()).or_default() += 1;
-            // stones.push_back(PlutoStone {
-            //     num_str: cap.to_string(),
-            //     // value: cap.to_string().parse::<i64>().unwrap(),
-            // });
         }
     }
     dbg!(&stones);
@@ -42,7 +37,6 @@ fn main_day_11_part_02() {
         println!("blink:{}", i);
         // dbg!(&stones.len());
         let mut newstones: HashMap<i64, i64> = HashMap::new();
-        // let mut newstones: VecDeque<PlutoStone> = VecDeque::new();
         let oldstones = stones.clone();
         for (key, _value) in oldstones.into_iter() {
             // println!("oldstones key:{} value:{}", &key, &value);
@@ -66,33 +60,6 @@ fn main_day_11_part_02() {
                 *newstones.entry(new_value).or_default() += stones[&key];
             }
         }
-        // while !stones.is_empty() {
-        //     let stone = stones.pop_front().unwrap();
-        //     let value = stone.num_str.parse::<i64>().unwrap();
-        //     if value == 0 {
-        //         newstones.push_back(PlutoStone {
-        //             num_str: "1".to_string(),
-        //             // value: 1,
-        //         });
-        //     } else if stone.num_str.chars().count() % 2 == 0 {
-        //         let split_index = stone.num_str.chars().count() / 2;
-        //         let (first, second) = stone.num_str.split_at(split_index);
-        //         newstones.push_back(PlutoStone {
-        //             num_str: first.to_string().parse::<i64>().unwrap().to_string(),
-        //             // value: first.to_string().parse::<i64>().unwrap(),
-        //         });
-        //         newstones.push_back(PlutoStone {
-        //             num_str: second.to_string().parse::<i64>().unwrap().to_string(),
-        //             // value: second.to_string().parse::<i64>().unwrap(),
-        //         });
-        //     } else {
-        //         let new_value = value * 2024;
-        //         newstones.push_back(PlutoStone {
-        //             num_str: new_value.to_string(),
-        //             // value: new_value,
-        //         });
-        //     }
-        // }
         stones = newstones;
         // dbg!(&stones);
     }
