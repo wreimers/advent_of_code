@@ -11,10 +11,13 @@ mod day_01;
 
 fn main() {
     let start = std::time::Instant::now();
-    main_day_11_part_02();
+    main_day_12_part_01();
     println!("{:?}", start.elapsed());
 }
 
+fn main_day_12_part_01() {}
+
+#[allow(dead_code)]
 fn main_day_11_part_02() {
     let mut stones: HashMap<i64, i64> = HashMap::new();
     let pathname = "./var/day_11_input.txt";
