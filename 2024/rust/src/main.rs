@@ -18,7 +18,7 @@ fn main() {
 fn main_day_11_part_02() {
     // let mut stones: VecDeque<PlutoStone> = VecDeque::new();
     let mut stones: HashMap<i64, i64> = HashMap::new();
-    let pathname = "./var/day_11_sample_input.txt";
+    let pathname = "./var/day_11_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
@@ -37,26 +37,32 @@ fn main_day_11_part_02() {
     }
     dbg!(&stones);
 
-    let blinks: i32 = 25;
+    let blinks: i32 = 75;
     for i in 0..blinks {
         println!("blink:{}", i);
         // dbg!(&stones.len());
         let mut newstones: HashMap<i64, i64> = HashMap::new();
         // let mut newstones: VecDeque<PlutoStone> = VecDeque::new();
         let oldstones = stones.clone();
-        for (key, value) in oldstones.into_iter() {
-            if value == 0 {
+        for (key, _value) in oldstones.into_iter() {
+            // println!("oldstones key:{} value:{}", &key, &value);
+            if key == 0 {
                 *newstones.entry(1).or_default() += stones[&key];
-            } else if value.to_string().chars().count() % 2 == 0 {
-                let num_str = value.to_string();
+            } else if key.to_string().chars().count() % 2 == 0 {
+                let num_str = key.to_string();
                 let split_index = num_str.chars().count() / 2;
                 let (first, second) = num_str.split_at(split_index);
+                // println!(
+                //     "split_index:{} first:{} second:{}",
+                //     &split_index, &first, &second
+                // );
                 let first_value = first.parse::<i64>().unwrap();
                 let second_value = second.parse::<i64>().unwrap();
                 *newstones.entry(first_value).or_default() += stones[&key];
                 *newstones.entry(second_value).or_default() += stones[&key];
             } else {
-                let new_value = value * 2024;
+                let new_value = key * 2024;
+                // println!("value:{} new_value:{}", &value, &new_value);
                 *newstones.entry(new_value).or_default() += stones[&key];
             }
         }
@@ -88,12 +94,12 @@ fn main_day_11_part_02() {
         //     }
         // }
         stones = newstones;
-        dbg!(&stones);
+        // dbg!(&stones);
     }
     // dbg!(&stones);
     let mut total_stones: i64 = 0;
-    for (key, value) in stones.into_iter() {
-        println!("{}:{}", &key, &value);
+    for (_key, value) in stones.into_iter() {
+        // println!("{}:{}", &key, &value);
         total_stones += value;
     }
     dbg!(total_stones);
