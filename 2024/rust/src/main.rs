@@ -16,13 +16,18 @@ fn main() {
 }
 
 fn main_day_12_part_01() {
+    let mut garden: Vec<Vec<char>> = Vec::new();
     let pathname = "./var/day_12_sample_01_input.txt";
     let f = File::open(pathname).expect("Unable to open file");
     let f = BufReader::new(f);
     for line in f.lines() {
         let line = line.expect("Unable to read line");
         println!("{}", line);
+        let plots: Vec<char> = line.chars().collect();
+        println!("{:?}", plots);
+        garden.push(plots);
     }
+    dbg!(&garden);
 }
 
 #[allow(dead_code)]
